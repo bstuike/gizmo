@@ -54,7 +54,6 @@ func TestDomain() {
 
 // mainTasks function uses a switch statement to direct the user to a chosen task.
 func MainTasks() {
-
 	for choice != exit {
 		welcome(lg)
 		mainMenu(lg)
@@ -91,7 +90,6 @@ func MainTasks() {
 
 // advancedTasks function uses a switch statement to
 func advancedTasks() {
-
 	choiceL2 = ""
 	for choiceL2 != back {
 		atPrompt()
@@ -129,7 +127,6 @@ func advancedTasks() {
 
 // processTasks function uses a switch statement to
 func processTasks() {
-
 	choiceL3 = ""
 	for choiceL3 != back {
 		processMenu(lg)
@@ -160,7 +157,6 @@ func processTasks() {
 
 // serviceTasks function uses a switch statement to
 func serviceTasks() {
-
 	choiceL3 = ""
 	for choiceL3 != back {
 		serviceMenu(lg)
@@ -184,33 +180,5 @@ func serviceTasks() {
 		default:
 			fmt.Println("\nInvalid choice - Please try another selection")
 		}
-	}
-}
-
-func mainTitle() {
-	if lg == 0 {
-		fmt.Println(string(fgYellow), "*****************")
-		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
-		fmt.Println(" *****************", string(colorReset))
-	} else {
-		fmt.Println(string(fgYellow), "**********************")
-		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
-		fmt.Println(" **********************", string(colorReset))
-	}
-}
-
-func subTitle(num int) {
-	if lg == 0 {
-		fmt.Println(string(fgYellow), "*********************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" *********************", string(colorReset))
-	} else if lg == 1 && num == 23 {
-		fmt.Println(string(fgYellow), "*********************************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" *********************************", string(colorReset))
-	} else {
-		fmt.Println(string(fgYellow), "********************************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" ********************************", string(colorReset))
 	}
 }

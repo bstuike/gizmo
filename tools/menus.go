@@ -11,7 +11,7 @@ func welcome(lg int) {
 	fmt.Println("\tE - English")
 	fmt.Println("\n" + string(bgRed) + "                                           ")
 	fmt.Println(" ----------------------------------------- ")
-	fmt.Println(" ------------ SOS QuickTools ------------- ")
+	fmt.Println(" ----------- Quick Tools GIZMO ----------- ")
 	fmt.Println(" ----------------------------------------- ")
 	fmt.Println("                                          ", string(colorReset))
 	fmt.Println(string(fgBrightBlue) + "\n " + language[174][lg] + ":" + string(fgWhite) + " Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
@@ -78,4 +78,32 @@ func advancedTitle() {
 	fmt.Println("\n"+string(fgYellow), "**********************")
 	fmt.Println(" **", string(fgWhite), language[18][lg], string(fgYellow), "**")
 	fmt.Println(" **********************", string(colorReset))
+}
+
+func mainTitle() {
+	if lg == 0 {
+		fmt.Println(string(fgYellow), "*****************")
+		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
+		fmt.Println(" *****************", string(colorReset))
+	} else {
+		fmt.Println(string(fgYellow), "**********************")
+		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
+		fmt.Println(" **********************", string(colorReset))
+	}
+}
+
+func subTitle(num int) {
+	if lg == 0 {
+		fmt.Println(string(fgYellow), "*********************")
+		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
+		fmt.Println(" *********************", string(colorReset))
+	} else if lg == 1 && num == 23 {
+		fmt.Println(string(fgYellow), "*********************************")
+		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
+		fmt.Println(" *********************************", string(colorReset))
+	} else {
+		fmt.Println(string(fgYellow), "********************************")
+		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
+		fmt.Println(" ********************************", string(colorReset))
+	}
 }
