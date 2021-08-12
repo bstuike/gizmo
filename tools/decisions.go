@@ -88,7 +88,7 @@ func MainTasks() {
 	}
 }
 
-// advancedTasks function uses a switch statement to
+// advancedTasks function uses a switch statement to launch the appropriate function.
 func advancedTasks() {
 	choiceL2 = ""
 	for choiceL2 != back {
@@ -125,7 +125,7 @@ func advancedTasks() {
 	}
 }
 
-// processTasks function uses a switch statement to
+// processTasks function uses a switch statement to take action based on user input.
 func processTasks() {
 	choiceL3 = ""
 	for choiceL3 != back {
@@ -155,7 +155,7 @@ func processTasks() {
 	}
 }
 
-// serviceTasks function uses a switch statement to
+// serviceTasks function uses a switch statement to take action based on user input.
 func serviceTasks() {
 	choiceL3 = ""
 	for choiceL3 != back {

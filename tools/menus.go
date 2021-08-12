@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// welcome function displays the program name and author information
+// welcome function displays the program name and author information.
 func welcome(lg int) {
 	clear()
 	fmt.Print(" F - Français")
@@ -50,7 +50,7 @@ func advancedMenu(lg int) {
 	fmt.Print("\n " + language[5][lg])            // Please make a selection
 }
 
-// serviceMenu function displays the Service Tools menu
+// serviceMenu function displays the Service Tools menu.
 func serviceMenu(lg int) {
 	clear()
 	subTitle(24)
@@ -74,12 +74,14 @@ func processMenu(lg int) {
 	fmt.Print("\n " + language[30][lg])           // Please make a selection
 }
 
+// advancedTitle surrounds the Advanced Tools title with yellow stars.
 func advancedTitle() {
 	fmt.Println("\n"+string(fgYellow), "**********************")
 	fmt.Println(" **", string(fgWhite), language[18][lg], string(fgYellow), "**")
 	fmt.Println(" **********************", string(colorReset))
 }
 
+// mainTitle surrounds the Main Menu title with yellow stars.
 func mainTitle() {
 	if lg == 0 {
 		fmt.Println(string(fgYellow), "*****************")
@@ -92,6 +94,7 @@ func mainTitle() {
 	}
 }
 
+// subTitle surrounds the Service ot Process Tools title with yellow stars.
 func subTitle(num int) {
 	if lg == 0 {
 		fmt.Println(string(fgYellow), "*********************")
