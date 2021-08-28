@@ -9,12 +9,14 @@ var colorReset = "\033[0m"
 var fgRed = "\033[31m"
 var fgGreen = "\033[32m"
 var fgYellow = "\033[33m"
-var fgBlue = "\033[34m"
-var fgPurple = "\033[35m"
-var fgCyan = "\033[36m"
+
+// var fgBlue = "\033[34m"
+// var fgPurple = "\033[35m"
+// var fgCyan = "\033[36m"
 var fgWhite = "\033[37m"
 var bgRed = "\033[41m"
-var fgBrightRed = "\033[91m"
+
+// var fgBrightRed = "\033[91m"
 var fgBrightGreen = "\033[92m"
 var fgBrightYellow = "\033[93m"
 var fgBrightBlue = "\033[94m"
@@ -38,7 +40,7 @@ func unlock() {
 }
 
 // user function asks the user for a username and pulls the account information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
-func user() {
+func userName() {
 	fmt.Println("\nYou chose 3")
 }
 

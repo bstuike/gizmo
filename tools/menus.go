@@ -17,7 +17,7 @@ func welcome(lg int) {
 	fmt.Println(string(fgBrightBlue) + "\n " + language[174][lg] + ":" + string(fgWhite) + " Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
 	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
 	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println("\n " + language[4][lg] + string(fgGreen) + " Username")
+	fmt.Println("\n " + language[4][lg] + string(fgGreen) + " " + cliu())
 	fmt.Println()
 }
 

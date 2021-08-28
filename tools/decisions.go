@@ -14,15 +14,12 @@ var result string
 var choice string
 var choiceL2 string
 var choiceL3 string
-
-//var pc = powershellRVS("hostname")
-var pc = "ABCALGC678441D"
 var reader = bufio.NewReader(os.Stdin)
 var fqdn = ".cfia-acia.inspection.gc.ca"
 
 // OSsLanguage function determines the base language of the operating system.
 func OSLanguage() {
-	display := powershellRVS("(Get-WmiObject -class win32_operatingsystem).oslanguage")
+	display := powerShellRVS("(Get-WmiObject -class win32_operatingsystem).oslanguage")
 	eng := display > "1033"
 	if eng {
 		lg = 0
@@ -41,7 +38,7 @@ func TestDomain() {
 	fmt.Println(string(fgBrightYellow), "Testing", string(fgBrightMagenta), fqdn, string(fgBrightYellow), "Domain Controller speed...", string(fgBrightWhite))
 	for _, s := range cfia {
 		//pingReply := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object responsetime,address")
-		pingReplyAdd := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
+		pingReplyAdd := powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
 		//pingReply := powershellRVS("Test-Connection -TargetName " + s)
 		fmt.Println(pingReplyAdd)
 		if pingReplyAdd == "CFQCH3AWPDCP002.cfia-acia.inspection.gc.ca" {
@@ -52,7 +49,7 @@ func TestDomain() {
 	fmt.Scanln()
 }
 
-// mainTasks function uses a switch statement to direct the user to a chosen task.
+// MainTasks function uses a switch statement to direct the user to a chosen task.
 func MainTasks() {
 	for choice != exit {
 		welcome(lg)
@@ -68,7 +65,7 @@ func MainTasks() {
 		case "2":
 			unlock()
 		case "3":
-			user()
+			userName()
 		case "4":
 			computer()
 		case "5":
@@ -135,7 +132,7 @@ func processTasks() {
 
 		switch choiceL3 {
 		case "1":
-			result = powershellRVS("Get-process -ComputerName " + pc + fqdn)
+			result = getHostName()
 			fmt.Print(result)
 			fmt.Println("\nPress the Enter key to continue")
 			fmt.Scanln()

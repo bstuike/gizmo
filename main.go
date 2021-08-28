@@ -1,6 +1,5 @@
 /*
 main:
-- Go version: 1.16.7
 - Author: Byron Stuike
 - Date: 2021-08-11
 */
@@ -11,19 +10,30 @@ package main
 
 import (
 	"fmt"
+	"sync"
 
 	T "tools/tools"
 )
+
+// goodbye function prints a farwell messsage to an exiting user.
+func goodbye(wg *sync.WaitGroup) {
+	wg.Done()
+	fmt.Println("\n Thank you for using the Quick Tools System")
+	fmt.Println()
+}
+
+// goodbye function prints a farwell messsage to an exiting user.
+func pause(amount int) {
+	wg := new(sync.WaitGroup)
+	wg.Add(amount)
+	goodbye(wg)
+	wg.Wait()
+}
 
 // main function lauches the program and executes the main selection of program abilities.
 func main() {
 	T.OSLanguage()
 	//T.TestDomain()
 	T.MainTasks()
-	goodbye()
-}
-
-// goodbye function prints a farwell messsage to an exiting user.
-func goodbye() {
-	fmt.Println("\n Thank you for using the Quick Tools System")
+	pause(1)
 }
