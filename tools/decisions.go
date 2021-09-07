@@ -19,7 +19,7 @@ var fqdn = ".cfia-acia.inspection.gc.ca"
 
 // MainTasks function uses a switch statement to direct the user to a chosen task.
 func MainTasks() {
-	lg = OSLanguage()
+	lg = lcid()
 	for choice != exit {
 		welcome(lg)
 		mainMenu(lg)

@@ -38,8 +38,8 @@ func cliu() string {
 }
 
 // powershellEX function executes a PowerShell command directly.
-func powerShellEX(task string) {
-	psCmd := exec.Command(ps, "/c", task)
+func powerShellEXE(task string) {
+	psCmd := exec.Command(ps, task)
 
 	psCmd.Stdout = os.Stdout
 	psCmd.Stderr = os.Stderr
@@ -50,7 +50,7 @@ func powerShellEX(task string) {
 
 // powershellRVS function runs a PowerShell command and returns the output as a String.
 func powerShellRVS(task string) string {
-	psCmd := exec.Command(ps, "/c", task)
+	psCmd := exec.Command(ps, task)
 	psOut, _ := psCmd.Output()
 	return string(psOut)
 }
@@ -92,7 +92,7 @@ func testConnection() {
 	fmt.Println(string(fgGreen), language[151][lg])                                       // Connection succeeded!
 	fmt.Println(string(fgRed), language[152][lg])                                         // Connection failed!
 	fmt.Println("\n"+string(fgYellow), language[153][lg]+"...", string(colorReset))       // Testing speed
-	powerShellEX("ping -a " + getHostName())
+	powerShellEXE("ping -a " + getHostName())
 	fmt.Println("\n Press the Enter key to continue")
 	fmt.Scanln()
 }
@@ -118,10 +118,10 @@ func disableCard() {
 
 // reboot function will reboot a remote computer.
 func reboot() {
-	powerShellEX("Restart-Computer -ComputerName " + getHostName() + " -Force")
+	powerShellEXE("Restart-Computer -ComputerName " + getHostName() + " -Force")
 }
 
 // logoff function will force a logoff.
 func logoff() {
-	powerShellEX("Restart-Computer -ComputerName " + getHostName() + " -Force")
+	powerShellEXE("Restart-Computer -ComputerName " + getHostName() + " -Force")
 }

@@ -25,8 +25,8 @@ var fgBrightMagenta = "\033[95m"
 var fgBrightCyan = "\033[96m"
 var fgBrightWhite = "\033[97m"
 
-// OSsLanguage function determines the base language of the operating system.
-func OSLanguage() int {
+// lcid function determines the base language of the operating system.
+func lcid() int {
 	oslang := 0
 	display := powerShellRVS("Get-Culture | select -exp LCID")
 	fre, _ := strconv.Atoi(string(display))
