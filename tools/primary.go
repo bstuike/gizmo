@@ -2,6 +2,7 @@ package tools
 
 import (
 	"fmt"
+	"strconv"
 )
 
 // Colour pallette
@@ -25,14 +26,15 @@ var fgBrightCyan = "\033[96m"
 var fgBrightWhite = "\033[97m"
 
 // OSsLanguage function determines the base language of the operating system.
-func OSLanguage() {
-	display := powerShellRVS("(Get-WmiObject -class win32_operatingsystem).oslanguage")
-	eng := display > "1033"
-	if eng {
-		lg = 0
-	} else {
-		lg = 1
+func OSLanguage() int {
+	oslang := 0
+	display := powerShellRVS("Get-Culture | select -exp LCID")
+	fre, _ := strconv.Atoi(string(display))
+
+	if fre == 3084 {
+		oslang = 1
 	}
+	return oslang
 }
 
 // TestDomain function finds the connection speeds of the available Domain Controllers.
