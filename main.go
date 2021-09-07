@@ -22,7 +22,7 @@ func goodbye(wg *sync.WaitGroup) {
 	fmt.Println()
 }
 
-// goodbye function prints a farwell messsage to an exiting user.
+// pause function inserts a delay into the completion of a function.
 func pause(amount int) {
 	wg := new(sync.WaitGroup)
 	wg.Add(amount)

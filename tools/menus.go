@@ -9,16 +9,16 @@ func welcome(lg int) {
 	clear()
 	fmt.Print(" F - Français")
 	fmt.Println("\tE - English")
-	fmt.Println("\n" + string(bgRed) + "                                           ")
-	fmt.Println(" ----------------------------------------- ")
-	fmt.Println(" ----------- Quick Tools GIZMO ----------- ")
-	fmt.Println(" ----------------------------------------- ")
-	fmt.Println("                                          ", string(colorReset))
+	fmt.Println("\n" + string(bgRed) + "                                     ")
+	fmt.Println(" ----------------------------------- ")
+	fmt.Println(" ----------- Quick Tools ----------- ")
+	fmt.Println(" ----------------------------------- ")
+	fmt.Println("                                    ", string(colorReset))
 	fmt.Println(string(fgBrightBlue) + "\n " + language[174][lg] + ":" + string(fgWhite) + " Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
 	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
 	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
 	fmt.Println("\n " + language[4][lg] + string(fgGreen) + " " + cliu())
-	fmt.Println()
+	fmt.Println(string(colorReset))
 }
 
 // mainMenu function displays the complete list of initial options.

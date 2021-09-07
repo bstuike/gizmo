@@ -17,38 +17,6 @@ var choiceL3 string
 var reader = bufio.NewReader(os.Stdin)
 var fqdn = ".cfia-acia.inspection.gc.ca"
 
-// OSsLanguage function determines the base language of the operating system.
-func OSLanguage() {
-	display := powerShellRVS("(Get-WmiObject -class win32_operatingsystem).oslanguage")
-	eng := display > "1033"
-	if eng {
-		lg = 0
-	} else {
-		lg = 1
-	}
-}
-
-// TestDomain function
-func TestDomain() {
-	clear()
-	// dcSpeed := 1000
-	// var fastestDC int
-
-	fmt.Println(string(fgBrightGreen), "\nFinding fastest Domain Controllers...")
-	fmt.Println(string(fgBrightYellow), "Testing", string(fgBrightMagenta), fqdn, string(fgBrightYellow), "Domain Controller speed...", string(fgBrightWhite))
-	for _, s := range cfia {
-		//pingReply := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object responsetime,address")
-		pingReplyAdd := powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
-		//pingReply := powershellRVS("Test-Connection -TargetName " + s)
-		fmt.Println(pingReplyAdd)
-		if pingReplyAdd == "CFQCH3AWPDCP002.cfia-acia.inspection.gc.ca" {
-			fmt.Print("yes")
-		}
-	}
-	fmt.Println("\nPress the Enter key to continue")
-	fmt.Scanln()
-}
-
 // MainTasks function uses a switch statement to direct the user to a chosen task.
 func MainTasks() {
 	for choice != exit {

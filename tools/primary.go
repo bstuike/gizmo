@@ -24,6 +24,38 @@ var fgBrightMagenta = "\033[95m"
 var fgBrightCyan = "\033[96m"
 var fgBrightWhite = "\033[97m"
 
+// OSsLanguage function determines the base language of the operating system.
+func OSLanguage() {
+	display := powerShellRVS("(Get-WmiObject -class win32_operatingsystem).oslanguage")
+	eng := display > "1033"
+	if eng {
+		lg = 0
+	} else {
+		lg = 1
+	}
+}
+
+// TestDomain function finds the connection speeds of the available Domain Controllers.
+func TestDomain() {
+	clear()
+	// dcSpeed := 1000
+	// var fastestDC int
+
+	fmt.Println(string(fgBrightGreen), "\nFinding fastest Domain Controllers...")
+	fmt.Println(string(fgBrightYellow), "Testing", string(fgBrightMagenta), fqdn, string(fgBrightYellow), "Domain Controller speed...", string(fgBrightWhite))
+	for _, s := range cfia {
+		//pingReply := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object responsetime,address")
+		pingReplyAdd := powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
+		//pingReply := powershellRVS("Test-Connection -TargetName " + s)
+		fmt.Println(pingReplyAdd)
+		if pingReplyAdd == "CFQCH3AWPDCP002.cfia-acia.inspection.gc.ca" {
+			fmt.Print("yes")
+		}
+	}
+	fmt.Println("\nPress the Enter key to continue")
+	fmt.Scanln()
+}
+
 // orca function will verify if the specified user is an ORCA member or not.
 func orca() {
 	fmt.Println("\nYou chose 0")
@@ -39,7 +71,7 @@ func unlock() {
 	fmt.Println("\nYou chose 2")
 }
 
-// user function asks the user for a username and pulls the account information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// userName function asks the user for a username and pulls the account information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func userName() {
 	fmt.Println("\nYou chose 3")
 }
