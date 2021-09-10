@@ -25,18 +25,6 @@ var fgBrightMagenta = "\033[95m"
 var fgBrightCyan = "\033[96m"
 var fgBrightWhite = "\033[97m"
 
-// lcid function determines the base language of the operating system.
-func lcid() int {
-	oslang := 0
-	display := powerShellRVS("Get-Culture | select -exp LCID")
-	fre, _ := strconv.Atoi(string(display))
-
-	if fre == 3084 {
-		oslang = 1
-	}
-	return oslang
-}
-
 // TestDomain function finds the connection speeds of the available Domain Controllers.
 func TestDomain() {
 	clear()
@@ -56,6 +44,35 @@ func TestDomain() {
 	}
 	fmt.Println("\nPress the Enter key to continue")
 	fmt.Scanln()
+}
+
+// lcid function determines the base language of the operating system.
+func lcid() int {
+	oslang := 0
+	display := powerShellRVS("Get-Culture | select -exp LCID")
+	fre, _ := strconv.Atoi(string(display))
+
+	if fre == 3084 {
+		oslang = 1
+	}
+	return oslang
+}
+
+// welcome function displays the program name and author information.
+func welcome(lg int) {
+	clear()
+	fmt.Print(" F - Français")
+	fmt.Println("\tE - English")
+	fmt.Println("\n" + string(bgRed) + "                                     ")
+	fmt.Println(" ----------------------------------- ")
+	fmt.Println(" ----------- Quick Tools ----------- ")
+	fmt.Println(" ----------------------------------- ")
+	fmt.Println("                                    ", string(colorReset))
+	fmt.Println(string(fgBrightBlue) + "\n " + language[174][lg] + ":" + string(fgWhite) + " Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
+	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println("\n " + language[4][lg] + string(fgGreen) + " " + cliu())
+	fmt.Println(string(colorReset))
 }
 
 // orca function will verify if the specified user is an ORCA member or not.

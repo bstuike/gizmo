@@ -17,8 +17,8 @@ var choiceL3 string
 var reader = bufio.NewReader(os.Stdin)
 var fqdn = ".cfia-acia.inspection.gc.ca"
 
-// MainTasks function uses a switch statement to direct the user to a chosen task.
-func MainTasks() {
+// MainChoices function uses a switch statement to direct the user to a chosen task.
+func MainChoices() {
 	lg = lcid()
 	for choice != exit {
 		welcome(lg)
@@ -42,7 +42,7 @@ func MainTasks() {
 		case "6":
 			group()
 		case "7":
-			advancedTasks()
+			advancedChoices()
 		case "E":
 			lg = 0
 		case "F":
@@ -54,8 +54,8 @@ func MainTasks() {
 	}
 }
 
-// advancedTasks function uses a switch statement to launch the appropriate function.
-func advancedTasks() {
+// advancedChoices function uses a switch statement to launch the appropriate function.
+func advancedChoices() {
 	choiceL2 = ""
 	for choiceL2 != back {
 		atPrompt()
@@ -74,9 +74,9 @@ func advancedTasks() {
 		case "4":
 			disableCard()
 		case "5":
-			processTasks()
+			processChoices()
 		case "6":
-			serviceTasks()
+			serviceChoices()
 		case "E":
 			lg = 0
 		case "F":
@@ -91,8 +91,8 @@ func advancedTasks() {
 	}
 }
 
-// processTasks function uses a switch statement to take action based on user input.
-func processTasks() {
+// processChoices function uses a switch statement to take action based on user input.
+func processChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {
 		processMenu(lg)
@@ -121,8 +121,8 @@ func processTasks() {
 	}
 }
 
-// serviceTasks function uses a switch statement to take action based on user input.
-func serviceTasks() {
+// serviceChoices function uses a switch statement to take action based on user input.
+func serviceChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {
 		serviceMenu(lg)

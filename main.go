@@ -33,6 +33,6 @@ func pause(amount int) {
 // main function lauches the program and executes the main selection of program abilities.
 func main() {
 	//T.TestDomain()
-	T.MainTasks()
+	T.MainChoices()
 	pause(1)
 }
