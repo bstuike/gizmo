@@ -12,6 +12,7 @@ var ps, _ = exec.LookPath("powershell.exe")
 
 // clear function clears the terminal or screen.
 func clear() {
+	fmt.Println(string(colorReset))
 	clearCmd := exec.Command("cmd", "/c", "cls")
 	clearCmd.Stdout = os.Stdout
 	clearCmd.Run()
@@ -21,11 +22,11 @@ func clear() {
 func atPrompt() {
 	clear()
 	fmt.Print(" " + language[15][lg] + ":") // Advanced tools are currently linked to
-	fmt.Println(string(fgGreen), getHostName())
+	fmt.Println(string(fgGreen), localPC())
 }
 
-// getHostName function gets the name of the computer.
-func getHostName() string {
+// localPC function gets the name of the local computer.
+func localPC() string {
 	pc, err := os.Hostname()
 	checkError(err)
 	return pc
@@ -37,7 +38,12 @@ func cliu() string {
 	return user.Name
 }
 
-// powershellEX function executes a PowerShell command directly.
+func carryon() {
+	fmt.Println("\nPress"+string(fgCyan), "Enter"+string(colorReset), "to continue")
+	fmt.Scanln()
+}
+
+// powershellEXE function executes a PowerShell command directly.
 func powerShellEXE(task string) {
 	psCmd := exec.Command(ps, task)
 
@@ -88,11 +94,11 @@ func powershellRVI(task string) int {
 // testConnection function will test the connection to a computer.
 func testConnection() {
 	atPrompt()
-	fmt.Println("\n"+string(fgYellow), language[150][lg], string(fgWhite), getHostName()) // Checking connection to
-	fmt.Println(string(fgGreen), language[151][lg])                                       // Connection succeeded!
-	fmt.Println(string(fgRed), language[152][lg])                                         // Connection failed!
-	fmt.Println("\n"+string(fgYellow), language[153][lg]+"...", string(colorReset))       // Testing speed
-	powerShellEXE("ping -a " + getHostName())
+	fmt.Println("\n"+string(fgYellow), language[150][lg], string(fgWhite), localPC()) // Checking connection to
+	fmt.Println(string(fgGreen), language[151][lg])                                   // Connection succeeded!
+	fmt.Println(string(fgRed), language[152][lg])                                     // Connection failed!
+	fmt.Println("\n"+string(fgYellow), language[153][lg]+"...", string(colorReset))   // Testing speed
+	powerShellEXE("ping -a " + localPC())
 	fmt.Println("\n Press the Enter key to continue")
 	fmt.Scanln()
 }
@@ -118,10 +124,10 @@ func disableCard() {
 
 // reboot function will reboot a remote computer.
 func reboot() {
-	powerShellEXE("Restart-Computer -ComputerName " + getHostName() + " -Force")
+	powerShellEXE("Restart-Computer -ComputerName " + localPC() + " -Force")
 }
 
 // logoff function will force a logoff.
 func logoff() {
-	powerShellEXE("Restart-Computer -ComputerName " + getHostName() + " -Force")
+	powerShellEXE("shutdown /l /m \\" + localPC() + " /t 0")
 }

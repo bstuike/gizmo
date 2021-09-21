@@ -101,7 +101,7 @@ func processChoices() {
 
 		switch choiceL3 {
 		case "1":
-			result = getHostName()
+			result = localPC()
 			fmt.Print(result)
 			fmt.Println("\nPress the Enter key to continue")
 			fmt.Scanln()

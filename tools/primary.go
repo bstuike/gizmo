@@ -13,7 +13,7 @@ var fgYellow = "\033[33m"
 
 // var fgBlue = "\033[34m"
 // var fgPurple = "\033[35m"
-// var fgCyan = "\033[36m"
+var fgCyan = "\033[36m"
 var fgWhite = "\033[37m"
 var bgRed = "\033[41m"
 
@@ -63,49 +63,56 @@ func welcome(lg int) {
 	clear()
 	fmt.Print(" F - Français")
 	fmt.Println("\tE - English")
-	fmt.Println("\n" + string(bgRed) + "                                     ")
+	fmt.Println("\n"+string(bgRed), "                                    ")
 	fmt.Println(" ----------------------------------- ")
 	fmt.Println(" ----------- Quick Tools ----------- ")
 	fmt.Println(" ----------------------------------- ")
 	fmt.Println("                                    ", string(colorReset))
-	fmt.Println(string(fgBrightBlue) + "\n " + language[174][lg] + ":" + string(fgWhite) + " Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
-	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite)+" Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println("\n " + language[4][lg] + string(fgGreen) + " " + cliu())
+	fmt.Println(string(fgBrightBlue)+"\n "+language[174][lg]+":"+string(fgWhite), "Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
+	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite), "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite), "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println("\n "+language[4][lg]+string(fgGreen), cliu())
 	fmt.Println(string(colorReset))
 }
 
 // orca function will verify if the specified user is an ORCA member or not.
 func orca() {
 	fmt.Println("\nYou chose 0")
+	carryon()
 }
 
 // password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
 	fmt.Println("\nYou chose 1")
+	carryon()
 }
 
 // unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
 func unlock() {
 	fmt.Println("\nYou chose 2")
+	carryon()
 }
 
 // userName function asks the user for a username and pulls the account information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func userName() {
 	fmt.Println("\nYou chose 3")
+	carryon()
 }
 
 // computer function asks the user for a computer name and pulls the machine information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func computer() {
 	fmt.Println("\nYou chose 4")
+	carryon()
 }
 
 // printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retreive the full list of CFIA printers.
 func printer() {
 	fmt.Println("\nYou chose 5")
+	carryon()
 }
 
 // group function asks for a group name and then searches Active Directory.
 func group() {
 	fmt.Println("\nYou chose 6")
+	carryon()
 }
