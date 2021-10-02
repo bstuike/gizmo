@@ -12,7 +12,7 @@ var ps, _ = exec.LookPath("powershell.exe")
 
 // clear function clears the terminal or screen.
 func clear() {
-	fmt.Println(string(colorReset))
+	fmt.Println(colorReset)
 	clearCmd := exec.Command("cmd", "/c", "cls")
 	clearCmd.Stdout = os.Stdout
 	clearCmd.Run()
@@ -22,7 +22,7 @@ func clear() {
 func atPrompt() {
 	clear()
 	fmt.Print(" " + language[15][lg] + ":") // Advanced tools are currently linked to
-	fmt.Println(string(fgGreen), localPC())
+	fmt.Println(fgGreen, localPC())
 }
 
 // localPC function gets the name of the local computer.
@@ -33,9 +33,9 @@ func localPC() string {
 }
 
 func cliu() string {
-	user, err := user.Current()
+	person, err := user.Current()
 	checkError(err)
-	return user.Name
+	return person.Name
 }
 
 func carryon() {
@@ -94,13 +94,12 @@ func powershellRVI(task string) int {
 // testConnection function will test the connection to a computer.
 func testConnection() {
 	atPrompt()
-	fmt.Println("\n"+string(fgYellow), language[150][lg], string(fgWhite), localPC()) // Checking connection to
-	fmt.Println(string(fgGreen), language[151][lg])                                   // Connection succeeded!
-	fmt.Println(string(fgRed), language[152][lg])                                     // Connection failed!
-	fmt.Println("\n"+string(fgYellow), language[153][lg]+"...", string(colorReset))   // Testing speed
+	fmt.Println("\n"+fgYellow, language[150][lg], fgWhite, localPC()) // Checking connection to
+	fmt.Println(fgGreen, language[151][lg])                           // Connection succeeded!
+	fmt.Println(fgRed, language[152][lg])                             // Connection failed!
+	fmt.Println("\n"+fgYellow, language[153][lg]+"...", colorReset)   // Testing speed
 	powerShellEXE("ping -a " + localPC())
-	fmt.Println("\n Press the Enter key to continue")
-	fmt.Scanln()
+	carryon()
 }
 
 // disableCard function will disable a network card on a remote computer.
@@ -117,9 +116,8 @@ func disableCard() {
 		fmt.Println(deviceID)
 	}
 
-	fmt.Println(string(fgRed), language[158][lg], string(colorReset))
-	fmt.Println("\n Press the Enter key to continue")
-	fmt.Scanln()
+	fmt.Println(fgRed, language[158][lg], colorReset)
+	carryon()
 }
 
 // reboot function will reboot a remote computer.

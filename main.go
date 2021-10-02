@@ -4,7 +4,9 @@ main:
 - Date: 2021-08-11
 */
 
-// go run main.go
+/*
+go run main.go
+*/
 
 package main
 

@@ -11,13 +11,17 @@ var fgRed = "\033[31m"
 var fgGreen = "\033[32m"
 var fgYellow = "\033[33m"
 
-// var fgBlue = "\033[34m"
-// var fgPurple = "\033[35m"
+/*
+var fgBlue = "\033[34m"
+var fgPurple = "\033[35m"
+*/
 var fgCyan = "\033[36m"
 var fgWhite = "\033[37m"
 var bgRed = "\033[41m"
 
-// var fgBrightRed = "\033[91m"
+/*
+var fgBrightRed = "\033[91m"
+*/
 var fgBrightGreen = "\033[92m"
 var fgBrightYellow = "\033[93m"
 var fgBrightBlue = "\033[94m"
@@ -31,8 +35,8 @@ func TestDomain() {
 	// dcSpeed := 1000
 	// var fastestDC int
 
-	fmt.Println(string(fgBrightGreen), "\nFinding fastest Domain Controllers...")
-	fmt.Println(string(fgBrightYellow), "Testing", string(fgBrightMagenta), fqdn, string(fgBrightYellow), "Domain Controller speed...", string(fgBrightWhite))
+	fmt.Println(fgBrightGreen, "\nFinding fastest Domain Controllers...")
+	fmt.Println(fgBrightYellow, "Testing", fgBrightMagenta, fqdn, fgBrightYellow, "Domain Controller speed...", fgBrightWhite)
 	for _, s := range cfia {
 		//pingReply := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object responsetime,address")
 		pingReplyAdd := powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
@@ -42,8 +46,7 @@ func TestDomain() {
 			fmt.Print("yes")
 		}
 	}
-	fmt.Println("\nPress the Enter key to continue")
-	fmt.Scanln()
+	carryon()
 }
 
 // lcid function determines the base language of the operating system.
@@ -63,16 +66,16 @@ func welcome(lg int) {
 	clear()
 	fmt.Print(" F - Français")
 	fmt.Println("\tE - English")
-	fmt.Println("\n"+string(bgRed), "                                    ")
+	fmt.Println("\n"+bgRed, "                                    ")
 	fmt.Println(" ----------------------------------- ")
 	fmt.Println(" ----------- Quick Tools ----------- ")
 	fmt.Println(" ----------------------------------- ")
-	fmt.Println("                                    ", string(colorReset))
-	fmt.Println(string(fgBrightBlue)+"\n "+language[174][lg]+":"+string(fgWhite), "Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
-	fmt.Println(string(fgBrightCyan), language[1][lg]+":"+string(fgWhite), "Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println(string(fgBrightYellow), language[2][lg]+":"+string(fgWhite), "Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println("\n "+language[4][lg]+string(fgGreen), cliu())
-	fmt.Println(string(colorReset))
+	fmt.Println("                                    ", colorReset)
+	fmt.Println(fgBrightBlue+"\n "+language[174][lg]+":"+fgWhite, "Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
+	fmt.Println(fgBrightCyan, language[1][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println(fgBrightYellow, language[2][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println("\n "+language[4][lg]+fgGreen, cliu())
+	fmt.Println(colorReset)
 }
 
 // orca function will verify if the specified user is an ORCA member or not.

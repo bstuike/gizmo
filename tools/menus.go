@@ -59,37 +59,37 @@ func processMenu(lg int) {
 
 // advancedTitle surrounds the Advanced Tools title with yellow stars.
 func advancedTitle() {
-	fmt.Println("\n"+string(fgYellow), "**********************")
-	fmt.Println(" **", string(fgWhite), language[18][lg], string(fgYellow), "**")
-	fmt.Println(" **********************", string(colorReset))
+	fmt.Println("\n"+fgYellow, "**********************")
+	fmt.Println(" **", fgWhite, language[18][lg], fgYellow, "**")
+	fmt.Println(" **********************", colorReset)
 }
 
 // mainTitle surrounds the Main Menu title with yellow stars.
 func mainTitle() {
 	if lg == 0 {
-		fmt.Println(string(fgYellow), "*****************")
-		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
-		fmt.Println(" *****************", string(colorReset))
+		fmt.Println(fgYellow, "*****************")
+		fmt.Println(" **", fgWhite, language[175][lg], fgYellow, "**")
+		fmt.Println(" *****************", colorReset)
 	} else {
-		fmt.Println(string(fgYellow), "**********************")
-		fmt.Println(" **", string(fgWhite), language[175][lg], string(fgYellow), "**")
-		fmt.Println(" **********************", string(colorReset))
+		fmt.Println(fgYellow, "**********************")
+		fmt.Println(" **", fgWhite, language[175][lg], fgYellow, "**")
+		fmt.Println(" **********************", colorReset)
 	}
 }
 
 // subTitle surrounds the Service ot Process Tools title with yellow stars.
 func subTitle(num int) {
 	if lg == 0 {
-		fmt.Println(string(fgYellow), "*********************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" *********************", string(colorReset))
+		fmt.Println(fgYellow, "*********************")
+		fmt.Println(" **", fgWhite, language[num][lg], fgYellow, "**")
+		fmt.Println(" *********************", colorReset)
 	} else if lg == 1 && num == 23 {
-		fmt.Println(string(fgYellow), "*********************************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" *********************************", string(colorReset))
+		fmt.Println(fgYellow, "*********************************")
+		fmt.Println(" **", fgWhite, language[num][lg], fgYellow, "**")
+		fmt.Println(" *********************************", colorReset)
 	} else {
-		fmt.Println(string(fgYellow), "********************************")
-		fmt.Println(" **", string(fgWhite), language[num][lg], string(fgYellow), "**")
-		fmt.Println(" ********************************", string(colorReset))
+		fmt.Println(fgYellow, "********************************")
+		fmt.Println(" **", fgWhite, language[num][lg], fgYellow, "**")
+		fmt.Println(" ********************************", colorReset)
 	}
 }
