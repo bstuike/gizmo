@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// Colour pallette
+// Colour palette
 var colorReset = "\033[0m"
 var fgRed = "\033[31m"
 var fgGreen = "\033[32m"
@@ -53,7 +53,7 @@ func TestDomain() {
 func lcid() int {
 	oslang := 0
 	display := powerShellRVS("Get-Culture | select -exp LCID")
-	fre, _ := strconv.Atoi(string(display))
+	fre, _ := strconv.Atoi(display)
 
 	if fre == 3084 {
 		oslang = 1

@@ -15,7 +15,9 @@ func clear() {
 	fmt.Println(colorReset)
 	clearCmd := exec.Command("cmd", "/c", "cls")
 	clearCmd.Stdout = os.Stdout
-	clearCmd.Run()
+
+	err := clearCmd.Run()
+	checkError(err)
 }
 
 // atPrompt function displays the computer connected to the application.
