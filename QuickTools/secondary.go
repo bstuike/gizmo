@@ -23,6 +23,7 @@ func clear() {
 // atPrompt function displays the computer connected to the application.
 func atPrompt() {
 	clear()
+	fmt.Println()
 	fmt.Print(" " + language[15][lg] + ":") // Advanced tools are currently linked to
 	fmt.Println(fgGreen, localPC())
 }

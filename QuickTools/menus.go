@@ -79,6 +79,7 @@ func mainTitle() {
 
 // subTitle surrounds the Service ot Process Tools title with yellow stars.
 func subTitle(num int) {
+	fmt.Println()
 	if lg == 0 {
 		fmt.Println(fgYellow, "*********************")
 		fmt.Println(" **", fgWhite, language[num][lg], fgYellow, "**")

@@ -64,6 +64,7 @@ func lcid() int {
 // welcome function displays the program name and author information.
 func welcome(lg int) {
 	clear()
+	fmt.Println()
 	fmt.Print(" F - Français")
 	fmt.Println("\tE - English")
 	fmt.Println("\n"+bgRed, "                                    ")
