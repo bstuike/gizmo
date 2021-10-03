@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"sync"
 
-	T "tools/tools"
+	T "QuickTools/QuickTools"
 )
 
 // goodbye function prints a farwell messsage to an exiting user.
