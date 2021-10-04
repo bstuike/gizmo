@@ -103,7 +103,7 @@ func processChoices() {
 		case "1":
 			result = localPC()
 			fmt.Print(result)
-			carryon()
+			enterKey()
 		case "2":
 		case "E":
 			lg = 0

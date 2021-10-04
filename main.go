@@ -17,7 +17,7 @@ import (
 	T "QuickTools/QuickTools"
 )
 
-// goodbye function prints a farwell messsage to an exiting user.
+// goodbye function prints a farewell message to an exiting user.
 func goodbye(wg *sync.WaitGroup) {
 	wg.Done()
 	fmt.Println("\n Thank you for using the Quick Tools System")
@@ -32,7 +32,7 @@ func pause(amount int) {
 	wg.Wait()
 }
 
-// main function lauches the program and executes the main selection of program abilities.
+// main function launches the program and executes the main selection of program abilities.
 func main() {
 	//T.TestDomain()
 	T.MainChoices()

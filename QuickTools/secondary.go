@@ -41,7 +41,7 @@ func cliu() string {
 	return person.Name
 }
 
-func carryon() {
+func enterKey() {
 	fmt.Println("\nPress"+string(fgCyan), "Enter"+string(colorReset), "to continue")
 	fmt.Scanln()
 }
@@ -102,7 +102,7 @@ func testConnection() {
 	fmt.Println(fgRed, language[152][lg])                             // Connection failed!
 	fmt.Println("\n"+fgYellow, language[153][lg]+"...", colorReset)   // Testing speed
 	powerShellEXE("ping -a " + localPC())
-	carryon()
+	enterKey()
 }
 
 // disableCard function will disable a network card on a remote computer.
@@ -120,7 +120,7 @@ func disableCard() {
 	}
 
 	fmt.Println(fgRed, language[158][lg], colorReset)
-	carryon()
+	enterKey()
 }
 
 // reboot function will reboot a remote computer.

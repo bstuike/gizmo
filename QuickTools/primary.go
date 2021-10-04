@@ -46,7 +46,7 @@ func TestDomain() {
 			fmt.Print("yes")
 		}
 	}
-	carryon()
+	enterKey()
 }
 
 // lcid function determines the base language of the operating system.
@@ -82,41 +82,41 @@ func welcome(lg int) {
 // orca function will verify if the specified user is an ORCA member or not.
 func orca() {
 	fmt.Println("\nYou chose 0")
-	carryon()
+	enterKey()
 }
 
 // password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
 	fmt.Println("\nYou chose 1")
-	carryon()
+	enterKey()
 }
 
 // unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
 func unlock() {
 	fmt.Println("\nYou chose 2")
-	carryon()
+	enterKey()
 }
 
-// userName function asks the user for a username and pulls the account information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// userName function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func userName() {
 	fmt.Println("\nYou chose 3")
-	carryon()
+	enterKey()
 }
 
-// computer function asks the user for a computer name and pulls the machine information from Active Directory. It also give quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// computer function asks the user for a computer name and pulls the machine information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func computer() {
 	fmt.Println("\nYou chose 4")
-	carryon()
+	enterKey()
 }
 
-// printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retreive the full list of CFIA printers.
+// printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
 func printer() {
 	fmt.Println("\nYou chose 5")
-	carryon()
+	enterKey()
 }
 
 // group function asks for a group name and then searches Active Directory.
 func group() {
 	fmt.Println("\nYou chose 6")
-	carryon()
+	enterKey()
 }

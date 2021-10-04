@@ -16,7 +16,7 @@ func mainMenu(lg int) {
 	fmt.Println("     6 - " + language[11][lg])    // GROUP Information
 	fmt.Println("\n     7 - " + language[12][lg])  // Advanced Computer Tools
 	fmt.Println("\n     9 - " + language[14][lg])  // Exit
-	fmt.Print("\n " + language[5][lg])             // Please make a selection
+	fmt.Print("\n " + language[5][lg])             // Please make a selection:
 }
 
 // advancedMenu function displays the Advanced Tools menu.
@@ -30,7 +30,7 @@ func advancedMenu(lg int) {
 	fmt.Println("     6 - " + language[24][lg])   // Service Tools
 	fmt.Println("\n     8 - " + language[13][lg]) // Back
 	fmt.Println("     9 - " + language[14][lg])   // Exit
-	fmt.Print("\n " + language[5][lg])            // Please make a selection
+	fmt.Print("\n " + language[5][lg])            // Please make a selection:
 }
 
 // serviceMenu function displays the Service Tools menu.
@@ -43,7 +43,7 @@ func serviceMenu(lg int) {
 	fmt.Println("     4 - " + language[42][lg])   // Stop Service(s)
 	fmt.Println("\n     8 - " + language[13][lg]) // Back
 	fmt.Println("     9 - " + language[14][lg])   // Exit
-	fmt.Print("\n " + language[30][lg])           // Please make a selection
+	fmt.Print("\n " + language[30][lg])           // Choose an operation:
 }
 
 // processMenu function displays the Process Tools menu.
@@ -54,7 +54,7 @@ func processMenu(lg int) {
 	fmt.Println("     2 - " + language[29][lg])   // Terminate process
 	fmt.Println("\n     8 - " + language[13][lg]) // Back
 	fmt.Println("     9 - " + language[14][lg])   // Exit
-	fmt.Print("\n " + language[30][lg])           // Please make a selection
+	fmt.Print("\n " + language[30][lg])           // Choose an operation:
 }
 
 // advancedTitle surrounds the Advanced Tools title with yellow stars.
