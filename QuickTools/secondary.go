@@ -125,7 +125,7 @@ func disableCard() {
 
 // reboot function will reboot a remote computer.
 func reboot() {
-	powerShellEXE("Restart-Computer -ComputerName " + localPC() + " -Force")
+	powerShellEXE("Restart-Computer -ComputerName " + "'" + localPC() + "'" + " -Force")
 }
 
 // logoff function will force a logoff.

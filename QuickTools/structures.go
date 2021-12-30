@@ -5,7 +5,7 @@ var cfia = []string{"CFONK1AWPDCP004", "CFABT2EWPDCP004", "CFABT2LWPDCP002", "CF
 
 // an array with 177 rows and 2 columns to hold the bilingual text options.
 var language = [177][2]string{
-	{"for Active Directory ... and more!!!", "Pour Active directory ... et plus!!!"},
+	{"for Active Directory ...and more!", "Pour Active directory ...et plus!"},
 	{"Go version created by", "Version Go cree par"},
 	{"Testing and Support", "Test et Support"},
 	{"WARNING!!! You aren't logged with your ADM account", "ATTENTION!!! Vous n'etes pas connecte avec votre compte ADM"},
