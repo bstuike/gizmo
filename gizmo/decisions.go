@@ -1,4 +1,4 @@
-package QuickTools
+package gizmo
 
 import (
 	"bufio"
@@ -17,7 +17,7 @@ var choiceL3 string
 var reader = bufio.NewReader(os.Stdin)
 var fqdn = ".cfia-acia.inspection.gc.ca"
 
-// MainChoices function uses a switch statement to direct the user to a chosen task.
+// The MainChoices function uses a switch statement to direct the user to a chosen task.
 func MainChoices() {
 	lg = lcid()
 	for choice != exit {
@@ -54,7 +54,7 @@ func MainChoices() {
 	}
 }
 
-// advancedChoices function uses a switch statement to launch the appropriate function.
+// The advancedChoices function uses a switch statement to launch the appropriate function.
 func advancedChoices() {
 	choiceL2 = ""
 	for choiceL2 != back {
@@ -91,7 +91,7 @@ func advancedChoices() {
 	}
 }
 
-// processChoices function uses a switch statement to take action based on user input.
+// The processChoices function uses a switch statement to take action based on user input.
 func processChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {
@@ -120,7 +120,7 @@ func processChoices() {
 	}
 }
 
-// serviceChoices function uses a switch statement to take action based on user input.
+// The serviceChoices function uses a switch statement to take action based on user input.
 func serviceChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {

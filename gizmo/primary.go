@@ -1,4 +1,4 @@
-package QuickTools
+package gizmo
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ var fgBrightMagenta = "\033[95m"
 var fgBrightCyan = "\033[96m"
 var fgBrightWhite = "\033[97m"
 
-// TestDomain function finds the connection speeds of the available Domain Controllers.
+// The TestDomain function finds the connection speeds of the available Domain Controllers.
 func TestDomain() {
 	clear()
 	// dcSpeed := 1000
@@ -49,7 +49,7 @@ func TestDomain() {
 	enterKey()
 }
 
-// lcid function determines the base language of the operating system.
+// The lcid function determines the base language of the operating system.
 func lcid() int {
 	oslang := 0
 	display := powerShellRVS("Get-Culture | select -exp LCID")
@@ -61,7 +61,7 @@ func lcid() int {
 	return oslang
 }
 
-// welcome function displays the program name and author information.
+// The welcome function displays the program name and author information.
 func welcome(lg int) {
 	clear()
 	fmt.Println()
@@ -83,43 +83,43 @@ func welcome(lg int) {
 	fmt.Println(colorReset)
 }
 
-// orca function will verify if the specified user is an ORCA member or not.
+// The orca function will verify if the specified user is an ORCA member or not.
 func orca() {
 	fmt.Println("\nYou chose 0")
 	enterKey()
 }
 
-// password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
+// The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
 	fmt.Println("\nYou chose 1")
 	enterKey()
 }
 
-// unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
+// The unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
 func unlock() {
 	fmt.Println("\nYou chose 2")
 	enterKey()
 }
 
-// userName function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// The userName function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func userName() {
 	fmt.Println("\nYou chose 3")
 	enterKey()
 }
 
-// computer function asks the user for a computer name and pulls the machine information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// The computer function asks the user for a computer name and pulls the machine information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func computer() {
 	fmt.Println("\nYou chose 4")
 	enterKey()
 }
 
-// printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
+// The printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
 func printer() {
 	fmt.Println("\nYou chose 5")
 	enterKey()
 }
 
-// group function asks for a group name and then searches Active Directory.
+// The group function asks for a group name and then searches Active Directory.
 func group() {
 	fmt.Println("\nYou chose 6")
 	enterKey()

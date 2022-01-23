@@ -1,10 +1,10 @@
-package QuickTools
+package gizmo
 
 import (
 	"fmt"
 )
 
-// mainMenu function displays the complete list of initial options.
+// The mainMenu function displays the complete list of initial options.
 func mainMenu(lg int) {
 	mainTitle()
 	fmt.Println("\n     0 - " + language[160][lg]) // ORCA Status Verification
@@ -19,7 +19,7 @@ func mainMenu(lg int) {
 	fmt.Print("\n " + language[5][lg])             // Please make a selection:
 }
 
-// advancedMenu function displays the Advanced Tools menu.
+// The advancedMenu function displays the Advanced Tools menu.
 func advancedMenu(lg int) {
 	advancedTitle()
 	fmt.Println("\n     1 - " + language[19][lg]) // Force Logoff
@@ -33,7 +33,7 @@ func advancedMenu(lg int) {
 	fmt.Print("\n " + language[5][lg])            // Please make a selection:
 }
 
-// serviceMenu function displays the Service Tools menu.
+// The serviceMenu function displays the Service Tools menu.
 func serviceMenu(lg int) {
 	clear()
 	subTitle(24)
@@ -46,7 +46,7 @@ func serviceMenu(lg int) {
 	fmt.Print("\n " + language[30][lg])           // Choose an operation:
 }
 
-// processMenu function displays the Process Tools menu.
+// The processMenu function displays the Process Tools menu.
 func processMenu(lg int) {
 	clear()
 	subTitle(23)
@@ -57,14 +57,14 @@ func processMenu(lg int) {
 	fmt.Print("\n " + language[30][lg])           // Choose an operation:
 }
 
-// advancedTitle surrounds the Advanced Tools title with yellow stars.
+// The advancedTitle surrounds the Advanced Tools title with yellow stars.
 func advancedTitle() {
 	fmt.Println("\n"+fgYellow, "**********************")
 	fmt.Println(" **", fgWhite, language[18][lg], fgYellow, "**")
 	fmt.Println(" **********************", colorReset)
 }
 
-// mainTitle surrounds the Main Menu title with yellow stars.
+// The mainTitle surrounds the Main Menu title with yellow stars.
 func mainTitle() {
 	if lg == 0 {
 		fmt.Println(fgYellow, "*****************")
@@ -77,7 +77,7 @@ func mainTitle() {
 	}
 }
 
-// subTitle surrounds the Service ot Process Tools title with yellow stars.
+// The subTitle surrounds the Service ot Process Tools title with yellow stars.
 func subTitle(num int) {
 	fmt.Println()
 	if lg == 0 {

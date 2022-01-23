@@ -1,3 +1,3 @@
-module QuickTools
+module gizmo
 
 go 1.17

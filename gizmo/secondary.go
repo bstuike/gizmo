@@ -1,4 +1,4 @@
-package QuickTools
+package gizmo
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 
 var ps, _ = exec.LookPath("powershell.exe")
 
-// clear function clears the terminal or screen.
+// The clear function clears the terminal or screen.
 func clear() {
 	fmt.Println(colorReset)
 	clearCmd := exec.Command("cmd", "/c", "cls")
@@ -20,7 +20,7 @@ func clear() {
 	checkError(err)
 }
 
-// atPrompt function displays the computer connected to the application.
+// The atPrompt function displays the computer connected to the application.
 func atPrompt() {
 	clear()
 	fmt.Println()
@@ -28,7 +28,7 @@ func atPrompt() {
 	fmt.Println(fgGreen, localPC())
 }
 
-// localPC function gets the name of the local computer.
+// The localPC function gets the name of the local computer.
 func localPC() string {
 	pc, err := os.Hostname()
 	checkError(err)
@@ -46,7 +46,7 @@ func enterKey() {
 	fmt.Scanln()
 }
 
-// powershellEXE function executes a PowerShell command directly.
+// The powershellEXE function executes a PowerShell command directly.
 func powerShellEXE(task string) {
 	psCmd := exec.Command(ps, task)
 
@@ -57,14 +57,14 @@ func powerShellEXE(task string) {
 	checkError(err)
 }
 
-// powershellRVS function runs a PowerShell command and returns the output as a String.
+// The powershellRVS function runs a PowerShell command and returns the output as a String.
 func powerShellRVS(task string) string {
 	psCmd := exec.Command(ps, task)
 	psOut, _ := psCmd.Output()
 	return string(psOut)
 }
 
-// checkError function executes the builtin panic function if an error is detected.
+// The checkError function executes the builtin panic function if an error is detected.
 func checkError(err error) {
 	if err != nil {
 		panic(err)
@@ -94,7 +94,7 @@ func powershellRVI(task string) int {
 }
 */
 
-// testConnection function will test the connection to a computer.
+// The testConnection function will test the connection to a computer.
 func testConnection() {
 	atPrompt()
 	fmt.Println("\n"+fgYellow, language[150][lg], fgWhite, localPC()) // Checking connection to
@@ -105,7 +105,7 @@ func testConnection() {
 	enterKey()
 }
 
-// disableCard function will disable a network card on a remote computer.
+// The disableCard function will disable a network card on a remote computer.
 func disableCard() {
 	adapters := powerShellRVS("Get-NetAdapter -Name * -IncludeHidden | Format-List -Property deviceid,name")
 	fmt.Print(adapters)
@@ -123,12 +123,12 @@ func disableCard() {
 	enterKey()
 }
 
-// reboot function will reboot a remote computer.
+// The reboot function will reboot a remote computer.
 func reboot() {
 	powerShellEXE("Restart-Computer -ComputerName " + "'" + localPC() + "'" + " -Force")
 }
 
-// logoff function will force a logoff.
+// The logoff function will force a logoff.
 func logoff() {
 	powerShellEXE("shutdown /l /m \\" + localPC() + " /t 0")
 }
