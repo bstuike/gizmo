@@ -2,32 +2,43 @@ package gizmo
 
 import (
 	"fmt"
+	"log"
 	"strconv"
+
+	"github.com/go-ldap/ldap/v3"
 )
 
-// Colour palette
-var colorReset = "\033[0m"
-var fgRed = "\033[31m"
-var fgGreen = "\033[32m"
-var fgYellow = "\033[33m"
+const (
+	// Colour palette
+	colorReset = "\033[0m"
+	fgRed      = "\033[31m"
+	fgGreen    = "\033[32m"
+	fgYellow   = "\033[33m"
+	fgBlue     = "\033[34m"
+	fgPurple   = "\033[35m"
+	fgCyan     = "\033[36m"
+	fgWhite    = "\033[37m"
+	bgRed      = "\033[41m"
 
-/*
-var fgBlue = "\033[34m"
-var fgPurple = "\033[35m"
-*/
-var fgCyan = "\033[36m"
-var fgWhite = "\033[37m"
-var bgRed = "\033[41m"
+	fgBrightRed     = "\033[91m"
+	fgBrightGreen   = "\033[92m"
+	fgBrightYellow  = "\033[93m"
+	fgBrightBlue    = "\033[94m"
+	fgBrightMagenta = "\033[95m"
+	fgBrightCyan    = "\033[96m"
+	fgBrightWhite   = "\033[97m"
 
-/*
-var fgBrightRed = "\033[91m"
-*/
-var fgBrightGreen = "\033[92m"
-var fgBrightYellow = "\033[93m"
-var fgBrightBlue = "\033[94m"
-var fgBrightMagenta = "\033[95m"
-var fgBrightCyan = "\033[96m"
-var fgBrightWhite = "\033[97m"
+	// Constants for binding and searching the LDAP server
+	fqdn         = ".CFIA-ACIA.inspection.gc.ca"
+	ldapURL      = "ldaps://CFONK1AWVDCP007.CFIA-ACIA.inspection.gc.ca"
+	ldapBind     = "CN=Byron Stuike,OU=AB,OU=Administrative Objects,DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+	ldapPassword = "Av3ng3r$"
+	baseDN       = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+)
+
+var l, err = ldap.DialURL(ldapURL)
+var ldapUser = "Byron Stuike"
+var filterDN = fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapUser))
 
 // The TestDomain function finds the connection speeds of the available Domain Controllers.
 func TestDomain() {
@@ -49,6 +60,16 @@ func TestDomain() {
 	enterKey()
 }
 
+// The LDAPConnect function connects to the best available Domain Controllers.
+func LDAPConnect() {
+	checkError(err)
+
+	err = l.Bind(ldapBind, ldapPassword)
+	checkError(err)
+
+	//defer l.Close()
+}
+
 // The lcid function determines the base language of the operating system.
 func lcid() int {
 	oslang := 0
@@ -61,28 +82,6 @@ func lcid() int {
 	return oslang
 }
 
-// The welcome function displays the program name and author information.
-func welcome(lg int) {
-	clear()
-	fmt.Println()
-	fmt.Print(" F - Français")
-	fmt.Println("\tE - English")
-	fmt.Println("\n"+bgRed, fgBrightWhite, "                                                   ")
-	fmt.Println(`     o-o              o        o-O-o        o        `)
-	fmt.Println(`    o   o      o      | /        |          |        `)
-	fmt.Println(`    |   | o  o    o-o OO         |  o-o o-o | o-o    `)
-	fmt.Println(`    o   O |  | | |    | \        |  | | | | |  \     `)
-	fmt.Println(`     o-O\ o--o |  o-o o  o       o  o-o o-o o o-o    `)
-	fmt.Println("                                                     ")
-	fmt.Println("                " + language[0][lg] + "    ")
-	fmt.Println("                                                    ", colorReset)
-	fmt.Println(fgBrightBlue+"\n "+language[174][lg]+":"+fgWhite, "Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
-	fmt.Println(fgBrightCyan, language[1][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println(fgBrightYellow, language[2][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
-	fmt.Println("\n "+language[4][lg]+fgGreen, cliu())
-	fmt.Println(colorReset)
-}
-
 // The orca function will verify if the specified user is an ORCA member or not.
 func orca() {
 	fmt.Println("\nYou chose 0")
@@ -91,7 +90,15 @@ func orca() {
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
+	fmt.Println("\nEnter current password")
+	OldPassword := getInput()
+	fmt.Println("\nEnter new password")
+	NewPassword := getInput()
 	fmt.Println("\nYou chose 1")
+	passwdModReq := ldap.NewPasswordModifyRequest("", OldPassword, NewPassword)
+	if _, err = l.PasswordModify(passwdModReq); err != nil {
+		log.Fatalf("failed to modify password: %v", err)
+	}
 	enterKey()
 }
 
@@ -104,6 +111,7 @@ func unlock() {
 // The userName function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func userName() {
 	fmt.Println("\nYou chose 3")
+	query()
 	enterKey()
 }
 

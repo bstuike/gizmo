@@ -15,7 +15,8 @@ var choice string
 var choiceL2 string
 var choiceL3 string
 var reader = bufio.NewReader(os.Stdin)
-var fqdn = ".cfia-acia.inspection.gc.ca"
+
+//var fqdn = ".cfia-acia.inspection.gc.ca"
 
 // The MainChoices function uses a switch statement to direct the user to a chosen task.
 func MainChoices() {
@@ -23,7 +24,7 @@ func MainChoices() {
 	for choice != exit {
 		welcome(lg)
 		mainMenu(lg)
-		choice, _ = reader.ReadString('\n')
+		choice = getInput()
 		choice = strings.Title(strings.Replace(choice, "\r\n", "", -1))
 
 		switch choice {
@@ -52,6 +53,7 @@ func MainChoices() {
 			fmt.Println("\nInvalid choice - Please try another selection")
 		}
 	}
+	defer l.Close()
 }
 
 // The advancedChoices function uses a switch statement to launch the appropriate function.
@@ -60,7 +62,7 @@ func advancedChoices() {
 	for choiceL2 != back {
 		atPrompt()
 		advancedMenu(lg)
-		choiceL2, _ = reader.ReadString('\n')
+		choiceL2 = getInput()
 		choiceL2 = strings.Title(strings.Replace(choiceL2, "\r\n", "", -1))
 
 		switch choiceL2 {
@@ -96,7 +98,7 @@ func processChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {
 		processMenu(lg)
-		choiceL3, _ = reader.ReadString('\n')
+		choiceL3 = getInput()
 		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
 
 		switch choiceL3 {
@@ -125,14 +127,16 @@ func serviceChoices() {
 	choiceL3 = ""
 	for choiceL3 != back {
 		serviceMenu(lg)
-		choiceL3, _ = reader.ReadString('\n')
+		choiceL3 = getInput()
 		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
 
 		switch choiceL3 {
 		case "1":
 		case "2":
 		case "3":
+			restartService()
 		case "4":
+			stopService()
 		case "E":
 			lg = 0
 		case "F":
@@ -146,4 +150,10 @@ func serviceChoices() {
 			fmt.Println("\nInvalid choice - Please try another selection")
 		}
 	}
+}
+
+func getInput() string {
+	userInput := ""
+	userInput, _ = reader.ReadString('\n')
+	return userInput
 }

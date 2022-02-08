@@ -2,13 +2,17 @@ package gizmo
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"os/user"
 	"strings"
+
+	"github.com/go-ldap/ldap/v3"
 )
 
-var ps, _ = exec.LookPath("powershell.exe")
+var ps, _ = exec.LookPath("powershell")
+var serviceName string
 
 // The clear function clears the terminal or screen.
 func clear() {
@@ -46,6 +50,24 @@ func enterKey() {
 	fmt.Scanln()
 }
 
+func query() {
+	//user := "stuikeb"
+	//baseDN := "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+	//filter := fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapUser))
+
+	// Filters must start and finish with ()!
+	searchReq := ldap.NewSearchRequest(baseDN, ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false, filterDN, []string{"sAMAccountName"}, []ldap.Control{})
+
+	result, err := l.Search(searchReq)
+	if err != nil {
+		fmt.Println("Failed to query LDAP: ", err)
+		return
+	}
+	clear()
+	log.Println("\nGot", len(result.Entries), "search results:")
+	result.PrettyPrint(4)
+}
+
 // The powershellEXE function executes a PowerShell command directly.
 func powerShellEXE(task string) {
 	psCmd := exec.Command(ps, task)
@@ -60,32 +82,13 @@ func powerShellEXE(task string) {
 // The powershellRVS function runs a PowerShell command and returns the output as a String.
 func powerShellRVS(task string) string {
 	psCmd := exec.Command(ps, task)
-	psOut, _ := psCmd.Output()
+	psOut, _ := psCmd.CombinedOutput()
 	return string(psOut)
 }
 
-// The checkError function executes the builtin panic function if an error is detected.
-func checkError(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-/*
-// console function runs standard command prompt commands.
-func console(task string) {
-	cmd := exec.Command("cmd", "/c", task)
-
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	checkError(err)
-}
-*/
-
 /*
 // powershellRVI function runs a PowerShell command and returns the output as an Integer.
-func powershellRVI(task string) int {
+func powerShellRVI(task string) int {
 	psCmd := exec.Command(ps, "/c", task)
 
 	psOut, _ := psCmd.Output()
@@ -94,6 +97,13 @@ func powershellRVI(task string) int {
 }
 */
 
+// The checkError function executes the builtin panic function if an error is detected.
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // The testConnection function will test the connection to a computer.
 func testConnection() {
 	atPrompt()
@@ -101,7 +111,16 @@ func testConnection() {
 	fmt.Println(fgGreen, language[151][lg])                           // Connection succeeded!
 	fmt.Println(fgRed, language[152][lg])                             // Connection failed!
 	fmt.Println("\n"+fgYellow, language[153][lg]+"...", colorReset)   // Testing speed
-	powerShellEXE("ping -a " + localPC())
+	//responseTime := powerShellRVI("Test-Connection -ComputerName 10.139.18.166 -ErrorAction silentlycontinue | Select-Object -Property responsetime")
+	responseTime := powerShellRVS("Test-Connection -ComputerName abcalgc682020p")
+	// rtime := powerShellEXE("$AVSpeed = $AVSpeed / $results.count")
+	// for {key}, {value} := range {list}
+	// for _, time := range results {
+	// 	fmt.Println("My animal is:", time)
+	// }
+	//avgspeed := 4
+	fmt.Print(responseTime)
+	//powerShellEXE("ping -a " + localPC())
 	enterKey()
 }
 
@@ -121,6 +140,14 @@ func disableCard() {
 
 	fmt.Println(fgRed, language[158][lg], colorReset)
 	enterKey()
+}
+
+func restartService() {
+	powerShellEXE("Restart-Service -Name " + serviceName)
+}
+
+func stopService() {
+	powerShellEXE("Stop-Service -Name " + serviceName)
 }
 
 // The reboot function will reboot a remote computer.

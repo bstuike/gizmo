@@ -4,6 +4,28 @@ import (
 	"fmt"
 )
 
+// The welcome function displays the program name and author information.
+func welcome(lg int) {
+	clear()
+	fmt.Println()
+	fmt.Print(" F - Français")
+	fmt.Println("\tE - English")
+	fmt.Println("\n"+bgRed, fgBrightWhite, "                                                                           ")
+	fmt.Println(`     ___     ___     ___       o-o              o      o-O-o        o        `)
+	fmt.Println(`    (_-<    / _ \   (_-<      o   o      o      | /      |          |        `)
+	fmt.Println(`    /__/_   \___/   /__/_     |   | o  o    o-o OO       |  o-o o-o | o-o    `)
+	fmt.Println(`   |"""""|_|"""""|_|"""""|    o   O |  | | |    | \      |  | | | | |  \     `)
+	fmt.Println(`    -0-0-   -0-0-   -0-0-      o-O\ o--o |  o-o o  o     o  o-o o-o o o-o    `)
+	fmt.Println("                                                                             ")
+	fmt.Println("                       " + language[0][lg] + "                     ")
+	fmt.Println("                                                                            ", colorReset)
+	fmt.Println(fgBrightBlue+"\n "+language[174][lg]+":"+fgWhite, "Marc-Antoine Beord (marc-antoine.beord@ssc-spc.gc.ca)")
+	fmt.Println(fgBrightCyan, language[1][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println(fgBrightYellow, language[2][lg]+":"+fgWhite, "Byron Stuike (byron.stuike@inspection.gc.ca)")
+	fmt.Println("\n "+language[4][lg]+fgGreen, cliu())
+	fmt.Println(colorReset)
+}
+
 // The mainMenu function displays the complete list of initial options.
 func mainMenu(lg int) {
 	mainTitle()

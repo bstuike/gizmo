@@ -16,5 +16,7 @@ import (
 
 // The main function launches the program and executes the main selection of program abilities.
 func main() {
+	// Q.TestDomain()
+	Q.LDAPConnect()
 	Q.MainChoices()
 }
