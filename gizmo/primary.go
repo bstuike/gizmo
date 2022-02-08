@@ -29,15 +29,15 @@ const (
 	fgBrightWhite   = "\033[97m"
 
 	// Constants for binding and searching the LDAP server
-	fqdn         = ".CFIA-ACIA.inspection.gc.ca"
-	ldapURL      = "ldaps://CFONK1AWVDCP007.CFIA-ACIA.inspection.gc.ca"
-	ldapBind     = "CN=Byron Stuike,OU=AB,OU=Administrative Objects,DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
-	ldapPassword = "Av3ng3r$"
-	baseDN       = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+	fqdn     = ".CFIA-ACIA.inspection.gc.ca"
+	ldapBind = "CN=Byron Stuike,OU=AB,OU=Administrative Objects,DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+	baseDN   = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
 )
 
+var ldapURL = "ldaps://CFONK1AWVDCP007" + fqdn
 var l, err = ldap.DialURL(ldapURL)
 var ldapUser = "Byron Stuike"
+var ldapPassword string
 var filterDN = fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapUser))
 
 // The TestDomain function finds the connection speeds of the available Domain Controllers.
