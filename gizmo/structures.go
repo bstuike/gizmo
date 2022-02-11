@@ -1,7 +1,7 @@
 package gizmo
 
 // A list of CFIA domain controllers.
-var cfia = []string{"CFONK1AWPDCP004", "CFABT2EWPDCP004", "CFABT2LWPDCP002", "CFBCV5CWPDCP002", "CFMBR3EWPDCP002", "CFNBE1CWPDCP004", "CFNSB3BWPDCP002", "CFONK1AWPDCP004", "CFONK1AWVDCP002", "CFONK1AWVDCP007", "CFONK1AWVDCP008", "CFONL5TWPDCP002", "CFONM3JWPDCP002", "CFONN1GWPDCP002", "CFONN1HWPDCP002", "CFQCH3AWPDCP002", "CFQCJ2SWPDCP002", "CFSKS7NWPDCP002"}
+var cfia = []string{"CFONK1AWPDCP004", "CFABT2EWPDCP004", "CFABT2LWPDCP002", "CFBCV5CWPDCP002", "CFMBR3EWPDCP002", "CFNBE1CWPDCP004", "CFNSB3BWPDCP002", "CFONK1AWPDCP004", "CFONK1AWVDCP007", "CFONK1AWVDCP008", "CFONL5TWPDCP002", "CFONM3JWPDCP002", "CFONN1GWPDCP002", "CFONN1HWPDCP002", "CFQCH3AWPDCP002", "CFQCJ2SWPDCP002", "CFSKS7NWPDCP002"}
 
 // An array with 177 rows and 2 columns to hold the bilingual text options.
 var language = [177][2]string{
@@ -136,7 +136,7 @@ var language = [177][2]string{
 	{"PRODUCT Information ... (A new window will open with the result.)", "Information des PRODUITS ...(Une nouvelle fenetre s'ouvrira avec le resultat.)"},
 	{"List of software installed on", "Liste des logiciels installes sur"},
 	{"LAUNCH ADVANCED TOOLS", "Lancer les OUTILS AVANCES"},
-	{"The following information was found for", "L'information suivante a ete trouve pour"},
+	{"The following information was found for:", "L'information suivante a ete trouve pour:"},
 	{"The printer is responding", "L'imprimante repond"},
 	{"The printer is not responding", "L'imprimante ne repond pas"},
 	{"cannot be verified", "ne peut pas etre verifie"},

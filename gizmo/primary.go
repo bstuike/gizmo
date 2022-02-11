@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/go-ldap/ldap/v3"
 )
@@ -29,51 +30,50 @@ const (
 	fgBrightWhite   = "\033[97m"
 
 	// Constants for binding and searching the LDAP server
-	fqdn     = ".CFIA-ACIA.inspection.gc.ca"
-	ldapBind = "CN=Byron Stuike,OU=AB,OU=Administrative Objects,DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
-	baseDN   = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
+	fqdn   = ".CFIA-ACIA.inspection.gc.ca"
+	baseDN = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
 )
 
-var ldapURL = "ldaps://CFONK1AWVDCP007" + fqdn
+var ldapURL = "ldaps://" + testDomain() + fqdn
+var ldapBind = "CN=" + ldapUser + ",OU=AB,OU=Administrative Objects," + baseDN
 var l, err = ldap.DialURL(ldapURL)
-var ldapUser = "Byron Stuike"
-var ldapPassword string
-var filterDN = fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapUser))
+var filterDN = fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapTestUser))
 
 // The TestDomain function finds the connection speeds of the available Domain Controllers.
-func TestDomain() {
+func testDomain() string {
 	clear()
-	// dcSpeed := 1000
-	// var fastestDC int
+	var bestDC string
+	var pingDCint int
+	var fastestTime int
+	var pingDCstring string
 
 	fmt.Println(fgBrightGreen, "\nFinding fastest Domain Controllers...")
-	fmt.Println(fgBrightYellow, "Testing", fgBrightMagenta, fqdn, fgBrightYellow, "Domain Controller speed...", fgBrightWhite)
+	fmt.Println(fgBrightYellow, "Testing Domain Controller speed...")
+
 	for _, s := range cfia {
-		//pingReply := powershellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object responsetime,address")
-		pingReplyAdd := powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select-Object address")
-		//pingReply := powershellRVS("Test-Connection -TargetName " + s)
-		fmt.Println(pingReplyAdd)
-		if pingReplyAdd == "CFQCH3AWPDCP002.cfia-acia.inspection.gc.ca" {
-			fmt.Print("yes")
+		fmt.Println(fgBrightMagenta, s+fqdn)
+		pingDCstring = strings.TrimSpace(powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 | Select -exp ResponseTime"))
+		pingDCint, _ = strconv.Atoi(pingDCstring)
+
+		if fastestTime < pingDCint {
+			fastestTime = pingDCint
+			bestDC = s
 		}
 	}
-	enterKey()
+	return bestDC
 }
 
 // The LDAPConnect function connects to the best available Domain Controllers.
 func LDAPConnect() {
 	checkError(err)
-
 	err = l.Bind(ldapBind, ldapPassword)
 	checkError(err)
-
-	//defer l.Close()
 }
 
 // The lcid function determines the base language of the operating system.
 func lcid() int {
 	oslang := 0
-	display := powerShellRVS("Get-Culture | select -exp LCID")
+	display := powerShellRVS("Get-Culture | Select -exp LCID")
 	fre, _ := strconv.Atoi(display)
 
 	if fre == 3084 {
@@ -90,12 +90,10 @@ func orca() {
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
-	fmt.Println("\nEnter current password")
-	OldPassword := getInput()
-	fmt.Println("\nEnter new password")
-	NewPassword := getInput()
-	fmt.Println("\nYou chose 1")
+	OldPassword := getInput("\nEnter current password")
+	NewPassword := getInput(language[81][lg])
 	passwdModReq := ldap.NewPasswordModifyRequest("", OldPassword, NewPassword)
+
 	if _, err = l.PasswordModify(passwdModReq); err != nil {
 		log.Fatalf("failed to modify password: %v", err)
 	}
@@ -105,11 +103,12 @@ func password() {
 // The unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
 func unlock() {
 	fmt.Println("\nYou chose 2")
+	powerShellEXE("Unlock-ADAccount -Identity " + ldapUser)
 	enterKey()
 }
 
-// The userName function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
-func userName() {
+// The entity function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
+func entity() {
 	fmt.Println("\nYou chose 3")
 	query()
 	enterKey()
