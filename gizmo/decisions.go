@@ -8,15 +8,11 @@ import (
 )
 
 const (
-	back = "8"
-	exit = "9"
+	back, exit = "8", "9"
 )
 
 var lg int
-var result string
-var choice string
-var choiceL2 string
-var choiceL3 string
+var choice, choiceL2, choiceL3 string
 var reader = bufio.NewReader(os.Stdin)
 
 // The MainOptions function uses a switch statement to direct the user to a chosen task.
@@ -25,6 +21,7 @@ func MainOptions() {
 	for choice != exit {
 		welcome(lg)
 		mainMenu(lg)
+		choiceL2 = ""
 		choice = getInput(language[5][lg])
 		choice = strings.Title(strings.Replace(choice, "\r\n", "", -1))
 
@@ -52,16 +49,19 @@ func MainOptions() {
 		case "9":
 		default:
 			fmt.Println("\nInvalid choice - Please try another selection")
+			enterKey()
 		}
 	}
-	defer l.Close()
+	defer link.Close()
 }
 
 // The advancedOptions function uses a switch statement to launch the appropriate function.
 func advancedOptions() {
+	csPrompt()
 	for choiceL2 != back {
 		atPrompt()
 		advancedMenu(lg)
+		choiceL3 = ""
 		choiceL2 = getInput(language[5][lg])
 		choiceL2 = strings.Title(strings.Replace(choiceL2, "\r\n", "", -1))
 
@@ -69,7 +69,6 @@ func advancedOptions() {
 		case "1":
 			logoff()
 		case "2":
-			atPrompt()
 			reboot()
 		case "3":
 			testConnection()
@@ -84,11 +83,13 @@ func advancedOptions() {
 		case "F":
 			lg = 1
 		case "8":
+			choiceL2 = back
 		case "9":
 			choiceL2 = back
 			choice = exit
 		default:
 			fmt.Println("\nInvalid choice - Please try another selection")
+			enterKey()
 		}
 	}
 }
@@ -96,13 +97,14 @@ func advancedOptions() {
 // The processOptions function uses a switch statement to take action based on user input.
 func processOptions() {
 	for choiceL3 != back {
+		atPrompt()
 		processMenu(lg) // Display Menu
 		choiceL3 = getInput(language[30][lg])
 		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
 
 		switch choiceL3 {
 		case "1":
-			result = localPC()
+			result := localPC()
 			fmt.Print(result)
 			enterKey()
 		case "2":
@@ -111,12 +113,14 @@ func processOptions() {
 		case "F":
 			lg = 1
 		case "8":
-		case "9":
-			choiceL2 = back
 			choiceL3 = back
+		case "9":
+			choiceL3 = back
+			choiceL2 = back
 			choice = exit
 		default:
 			fmt.Println("\nInvalid choice - Please try another selection")
+			enterKey()
 		}
 	}
 }
@@ -124,6 +128,7 @@ func processOptions() {
 // The serviceOptions function uses a switch statement to take action based on user input.
 func serviceOptions() {
 	for choiceL3 != back {
+		atPrompt()
 		serviceMenu(lg) // Display Menu
 		choiceL3 = getInput(language[30][lg])
 		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
@@ -140,12 +145,14 @@ func serviceOptions() {
 		case "F":
 			lg = 1
 		case "8":
-		case "9":
-			choiceL2 = back
 			choiceL3 = back
+		case "9":
+			choiceL3 = back
+			choiceL2 = back
 			choice = exit
 		default:
 			fmt.Println("\nInvalid choice - Please try another selection")
+			enterKey()
 		}
 	}
 }

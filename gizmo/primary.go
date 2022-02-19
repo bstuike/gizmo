@@ -3,14 +3,13 @@ package gizmo
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/go-ldap/ldap/v3"
 )
 
 const (
-	// Colour palette
+	// Colour palette.
 	colorReset = "\033[0m"
 	fgRed      = "\033[31m"
 	fgGreen    = "\033[32m"
@@ -29,33 +28,42 @@ const (
 	fgBrightCyan    = "\033[96m"
 	fgBrightWhite   = "\033[97m"
 
-	// Constants for binding and searching the LDAP server
+	// Constants for binding and searching the LDAP server.
 	fqdn   = ".CFIA-ACIA.inspection.gc.ca"
 	baseDN = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
 )
 
+// open declarations.
+var computerName, groupName, printerName, userName string
+
+// Valued declarations.
 var ldapURL = "ldaps://" + testDomain() + fqdn
 var ldapBind = "CN=" + ldapUser + ",OU=AB,OU=Administrative Objects," + baseDN
-var l, err = ldap.DialURL(ldapURL)
-var filterDN = fmt.Sprintf("(CN=%s)", ldap.EscapeFilter(ldapTestUser))
+var link, err = ldap.DialURL(ldapURL)
 
-// The TestDomain function finds the connection speeds of the available Domain Controllers.
+// The LDAPConnect function connects to the best available Domain Controllers.
+func LDAPConnect() {
+	checkError(err)
+	err = link.Bind(ldapBind, ldapPassword)
+	checkError(err)
+}
+
+// The testDomain function finds the connection speeds of the available Domain Controllers.
 func testDomain() string {
 	clear()
-	var bestDC string
+	var bestDC, pingDCstring string
 	var pingDCint int
-	var fastestTime int
-	var pingDCstring string
+	fastestTime := 9999
 
-	fmt.Println(fgBrightGreen, "\nFinding fastest Domain Controllers...")
+	fmt.Println(fgBrightGreen, "Finding fastest Domain Controllers...")
 	fmt.Println(fgBrightYellow, "Testing Domain Controller speed...")
 
 	for _, s := range cfia {
 		fmt.Println(fgBrightMagenta, s+fqdn)
-		pingDCstring = strings.TrimSpace(powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 | Select -exp ResponseTime"))
-		pingDCint, _ = strconv.Atoi(pingDCstring)
+		pingDCstring = strings.TrimSpace(powerShellRVS("Test-Connection -ComputerName " + s + fqdn + " -Count 1 -ErrorAction SilentlyContinue | Select -exp ResponseTime"))
+		pingDCint = intFromString(pingDCstring)
 
-		if fastestTime < pingDCint {
+		if pingDCint <= fastestTime {
 			fastestTime = pingDCint
 			bestDC = s
 		}
@@ -63,18 +71,11 @@ func testDomain() string {
 	return bestDC
 }
 
-// The LDAPConnect function connects to the best available Domain Controllers.
-func LDAPConnect() {
-	checkError(err)
-	err = l.Bind(ldapBind, ldapPassword)
-	checkError(err)
-}
-
 // The lcid function determines the base language of the operating system.
 func lcid() int {
 	oslang := 0
-	display := powerShellRVS("Get-Culture | Select -exp LCID")
-	fre, _ := strconv.Atoi(display)
+	display := strings.TrimSpace(powerShellRVS("Get-Culture | Select -exp LCID"))
+	fre := intFromString(display)
 
 	if fre == 3084 {
 		oslang = 1
@@ -90,44 +91,61 @@ func orca() {
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func password() {
-	OldPassword := getInput("\nEnter current password")
-	NewPassword := getInput(language[81][lg])
-	passwdModReq := ldap.NewPasswordModifyRequest("", OldPassword, NewPassword)
+	usPrompt()
+	fmt.Println(language[80][lg])
+	oldPassword := getInput("\n Enter your current password: ")
+	fmt.Println(language[87][lg])
+	newPassword := getInput(language[81][lg])
+	confirmPassword := getInput(language[82][lg])
 
-	if _, err = l.PasswordModify(passwdModReq); err != nil {
-		log.Fatalf("failed to modify password: %v", err)
+	if confirmPassword == newPassword {
+		passwdModReq := ldap.NewPasswordModifyRequest(userName, oldPassword, newPassword)
+
+		if _, err = link.PasswordModify(passwdModReq); err != nil {
+			log.Fatalf("failed to modify password: %v", err)
+		}
+		fmt.Println(language[88][lg])
+	} else {
+		fmt.Println(language[83][lg])
 	}
 	enterKey()
 }
 
 // The unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
 func unlock() {
-	fmt.Println("\nYou chose 2")
-	powerShellEXE("Unlock-ADAccount -Identity " + ldapUser)
+	usPrompt()
+	//powerShellEXE("Unlock-ADAccount -Identity " + userName)
+	fmt.Println("\n", language[97][lg]+fgCyan, userName)
 	enterKey()
 }
 
 // The entity function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func entity() {
-	fmt.Println("\nYou chose 3")
-	query()
+	usPrompt()
+	query(filterSAM, userSP, userName)
+	searchValues(result)
 	enterKey()
 }
 
 // The computer function asks the user for a computer name and pulls the machine information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func computer() {
-	fmt.Println("\nYou chose 4")
-	enterKey()
-}
-
-// The printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
-func printer() {
-	fmt.Println("\nYou chose 5")
+	csPrompt()
+	fmt.Println("\n Checking for...", computerName)
+	query(filterName, computerSP, computerName)
+	searchValues(result)
 	enterKey()
 }
 
 // The group function asks for a group name and then searches Active Directory.
 func group() {
-	fmt.Println("\nYou chose 6")
+	gsPrompt()
+	fmt.Println("\n Checking for...", groupName)
+	enterKey()
+}
+
+// The printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
+func printer() {
+	psPrompt()
+	fmt.Println("\n Checking for...", printerName)
 	enterKey()
 }

@@ -1,7 +1,8 @@
 /*
 main:
+- Quick Tools (Gizmo\1.0)
 - Author: Byron Stuike
-- Date: 2021-08-11
+- Release Date: 2022-04-11
 */
 
 /*
@@ -16,7 +17,6 @@ import (
 
 // The main function launches the program and executes the main selection of program abilities.
 func main() {
-	//Q.TestDomain()
 	Q.LDAPConnect()
 	Q.MainOptions()
 }
