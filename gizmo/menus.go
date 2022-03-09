@@ -4,12 +4,26 @@ import (
 	"fmt"
 )
 
+// The ADMLogin function displays
+func regionMenu() {
+	fmt.Println("\n 0 - Alberta")
+	fmt.Println(" 1 - BC")
+	fmt.Println(" 2 - Manitoba")
+	fmt.Println(" 3 - New Brunswick")
+	fmt.Println(" 4 - NCR")
+	fmt.Println(" 5 - Newfoundland")
+	fmt.Println(" 6 - Ontario")
+	fmt.Println(" 7 - PEI")
+	fmt.Println(" 8 - Quebec")
+	fmt.Println(" 9 - Saskatchewan")
+}
+
 // The welcome function displays the program name and author information.
 func welcome(lg int) {
 	clear()
 	fmt.Print(" F - Français")
 	fmt.Println("\tE - English")
-	fmt.Println("\n"+bgRed, fgBrightWhite, "                                                                           ")
+	fmt.Println("\n"+bgGreen, fgWhite, "                                                                           ")
 	fmt.Println(`     ___     ___     ___       o-o              o      o-O-o        o        `)
 	fmt.Println(`    (_-<    / _ \   (_-<      o   o      o      | /      |          |        `)
 	fmt.Println(`    /__/_   \___/   /__/_     |   | o  o    o-o OO       |  o-o o-o | o-o    `)
@@ -70,6 +84,19 @@ func processMenu(lg int) {
 	fmt.Println("     2 -", language[29][lg])   // Terminate process
 	fmt.Println("\n     8 -", language[13][lg]) // Back
 	fmt.Println("     9 -", language[14][lg])   // Exit
+}
+
+// The mainTitle surrounds the Main Menu title with yellow stars.
+func locationTitle() {
+	if lg == 0 {
+		fmt.Println(fgYellow, "**************")
+		fmt.Println(" **", fgWhite, language[175][lg], fgYellow, "**")
+		fmt.Println(" **************", colorReset)
+	} else {
+		fmt.Println(fgYellow, "*******************")
+		fmt.Println(" **", fgWhite, language[175][lg], fgYellow, "**")
+		fmt.Println(" *******************", colorReset)
+	}
 }
 
 // The advancedTitle surrounds the Advanced Tools title with yellow stars.

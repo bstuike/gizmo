@@ -18,7 +18,11 @@ const (
 	fgPurple   = "\033[35m"
 	fgCyan     = "\033[36m"
 	fgWhite    = "\033[37m"
-	bgRed      = "\033[41m"
+
+	bgRed    = "\033[41m"
+	bgGreen  = "\033[42m"
+	bgYellow = "\033[43m"
+	bgBlue   = "\033[44m"
 
 	fgBrightRed     = "\033[91m"
 	fgBrightGreen   = "\033[92m"
@@ -33,18 +37,41 @@ const (
 	baseDN = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
 )
 
-// open declarations.
-var computerName, groupName, printerName, userName string
+// Open declarations.
+var computerName, groupName, printerName, userName, ldapBind string
+var links *ldap.Conn
 
 // Valued declarations.
-var ldapURL = "ldaps://" + testDomain() + fqdn
-var ldapBind = "CN=" + ldapUser + ",OU=AB,OU=Administrative Objects," + baseDN
-var link, err = ldap.DialURL(ldapURL)
+var ldapUser = cliu()
 
-// The LDAPConnect function connects to the best available Domain Controllers.
-func LDAPConnect() {
-	checkError(err)
-	err = link.Bind(ldapBind, ldapPassword)
+//var ldapURL = "ldaps://" + testDomain() + fqdn
+var ldapURL = "ldaps://CFONK1AWVDCP008" + fqdn
+var link, err = ldap.DialURL(ldapURL)
+var badPasswordSP = []string{"badPwdCount", "badPasswordTime"}
+var computerSP = []string{"name", "description", "canonicalName", "dNSHostName", "lastLogonTimestamp", "userAccountControl"}
+var userSP = []string{"sAMAccountName", "name", "displayName", "title", "mail", "department", "description", "st", "lastLogonTimestamp", "pwdLastSet", "homeDirectory", "userAccountControl", "canonicalName", "accountExpires", "badPwdCount", "msDS-UserPasswordExpiryTimeComputed"}
+
+// The ldapConnect function connects to the best available Domain Controllers.
+func ldapConnect() {
+	var correct = false
+	for !correct {
+		region := admLocationPrompt()
+		ldapBind, _ = "CN="+ldapUser+",OU="+province[region]+",OU=Administrative Objects,"+baseDN, err
+		err = link.Bind(ldapBind, ldapPassword)
+		if err != nil {
+			fmt.Print("\n ", language[86][lg])
+			enterKey()
+		} else {
+			correct = true
+		}
+	}
+}
+
+// The ldapMultiConnect function connects to the best available Domain Controllers.
+func ldapMultiConnect(e string) {
+	ldapSearchURL := "ldaps://" + e + fqdn
+	links, err = ldap.DialURL(ldapSearchURL)
+	err = links.Bind(ldapBind, ldapPassword)
 	checkError(err)
 }
 
@@ -71,6 +98,20 @@ func testDomain() string {
 	return bestDC
 }
 
+// The searchDomainControllers function searches all known DC's for bad password counts.
+func searchDomainControllers() {
+	index = 0
+	place = 0
+	lockedDCs = lockedDCs[:0]
+	for _, s := range cfia {
+		ldapMultiConnect(s)
+		query(links, filterSAM, badPasswordSP, userName)
+		searchBadPassword(result, s)
+		links.Close()
+		index++
+	}
+}
+
 // The lcid function determines the base language of the operating system.
 func lcid() int {
 	oslang := 0
@@ -90,7 +131,7 @@ func orca() {
 }
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
-func password() {
+func password(link *ldap.Conn) {
 	usPrompt()
 	fmt.Println(language[80][lg])
 	oldPassword := getInput("\n Enter your current password: ")
@@ -111,28 +152,30 @@ func password() {
 	enterKey()
 }
 
-// The unlock function will verify if an account is locked out. If yes, it will propose to unlock it.
-func unlock() {
+// The locked function will verify if an account is locked out. If yes, it will propose to unlock it.
+func locked() {
 	usPrompt()
-	//powerShellEXE("Unlock-ADAccount -Identity " + userName)
-	fmt.Println("\n", language[97][lg]+fgCyan, userName)
+	fmt.Print("\n ", language[90][lg])
+	searchDomainControllers()
+	printControllerValues()
+	callForUnlock()
 	enterKey()
 }
 
 // The entity function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func entity() {
 	usPrompt()
-	query(filterSAM, userSP, userName)
-	searchValues(result)
+	query(link, filterSAM, userSP, userName)
+	assignObjectValues(result)
 	enterKey()
 }
 
-// The computer function asks the user for a computer name and pulls the machine information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
+// The computer function asks the user for a computer name and pulls the machine information from Active Directory.
 func computer() {
 	csPrompt()
 	fmt.Println("\n Checking for...", computerName)
-	query(filterName, computerSP, computerName)
-	searchValues(result)
+	query(link, filterName, computerSP, computerName)
+	assignObjectValues(result)
 	enterKey()
 }
 

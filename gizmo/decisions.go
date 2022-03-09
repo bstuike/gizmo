@@ -18,6 +18,8 @@ var reader = bufio.NewReader(os.Stdin)
 // The MainOptions function uses a switch statement to direct the user to a chosen task.
 func MainOptions() {
 	lg = lcid()
+	welcome(lg)
+	ldapConnect()
 	for choice != exit {
 		welcome(lg)
 		mainMenu(lg)
@@ -29,9 +31,9 @@ func MainOptions() {
 		case "0":
 			orca()
 		case "1":
-			password()
+			password(link)
 		case "2":
-			unlock()
+			locked()
 		case "3":
 			entity()
 		case "4":
@@ -52,7 +54,7 @@ func MainOptions() {
 			enterKey()
 		}
 	}
-	defer link.Close()
+	link.Close()
 }
 
 // The advancedOptions function uses a switch statement to launch the appropriate function.
@@ -128,6 +130,7 @@ func processOptions() {
 // The serviceOptions function uses a switch statement to take action based on user input.
 func serviceOptions() {
 	for choiceL3 != back {
+		var serviceName string
 		atPrompt()
 		serviceMenu(lg) // Display Menu
 		choiceL3 = getInput(language[30][lg])
@@ -137,9 +140,11 @@ func serviceOptions() {
 		case "1":
 		case "2":
 		case "3":
-			restartService()
+			serviceName = getInput(language[44][lg])
+			restartService(serviceName)
 		case "4":
-			stopService()
+			serviceName = getInput(language[32][lg])
+			stopService(serviceName)
 		case "E":
 			lg = 0
 		case "F":

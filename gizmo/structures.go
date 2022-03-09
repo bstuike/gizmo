@@ -1,5 +1,7 @@
 package gizmo
 
+var province = []string{"AB", "BC", "MB", "NB", "NC", "NL", "NS", "ON", "PE", "QC", "SK"}
+
 // A list of CFIA domain controllers.
 var cfia = []string{"CFONK1AWPDCP004", "CFABT2EWPDCP004", "CFABT2LWPDCP002", "CFBCV5CWPDCP002", "CFMBR3EWPDCP002", "CFNBE1CWPDCP004", "CFNSB3BWPDCP002", "CFONK1AWPDCP004", "CFONK1AWVDCP007", "CFONK1AWVDCP008", "CFONL5TWPDCP002", "CFONM3JWPDCP002", "CFONN1GWPDCP002", "CFONN1HWPDCP002", "CFQCH3AWPDCP002", "CFQCJ2SWPDCP002", "CFSKS7NWPDCP002"}
 
@@ -95,11 +97,11 @@ var language = [177][2]string{
 	{"MAKE SURE THE PASSWORD RESPECTS THE MINIMUM REQUIERMENTS", "ASSUREZ VOUS QUE LE MOT DE PASSE RESPECT LES CARACTERISTIQUES MINIMUMS"},
 	{"The password was successfully reset", "Le mot de passe a ete change avec succes"},
 	{"Do you want to check if the account is locked out", "Voulez-vous verifier si le compte est verouille"},
-	{"Retreiving user information on multiple Domain Controllers. Please wait", "Recuperation de l'information de l'usager sur de multiple controleur de domaine. SVP patienter"},
+	{"Retreiving user information on multiple Domain Controllers. Please wait...", "Recuperation de l'information de l'usager sur de multiple controleur de domaine. SVP patienter..."},
 	{"The account", "Le compte"},
-	{"doesn't appear to be locked", "ne semble pas etre verouille"},
-	{"account is locked out", "Ce compte est verouille"},
-	{"Do you want to unlock it now", "Est-ce que vous voulez le deverouiller maintenant"},
+	{"doesn't appear to be locked.", "ne semble pas etre verouille."},
+	{"account is locked out.", "Ce compte est verouille."},
+	{"Do you want to unlock it now? ", "Est-ce que vous voulez le deverouiller maintenant? "},
 	{"Unlocking", "Deverouillage"},
 	{"Unlocking account on", "Deverouillage en cours sur"},
 	{"I think I unlocked", "J'ai deverouille le compte"},
@@ -180,4 +182,5 @@ var language = [177][2]string{
 	{"Email Search", "Recherche par Courriel"},
 	{"PowerShell version created by:", "Version originale de PowerShell cree par:"},
 	{"Main Menu", "Menu Principal"},
+	{"Region", "Région"},
 }
