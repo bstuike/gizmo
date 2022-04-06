@@ -2,7 +2,6 @@ package gizmo
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"os/user"
@@ -20,15 +19,17 @@ type ADObject struct {
 }
 
 type Employee struct {
-	email, department, title, description, province, path, directory, lastLogon string
+	email, department, title, description, office, province, path, directory string
 }
 
 type Machine struct {
 	fqdn string
+	os   string
+	osv  string
 }
 
 type Values struct {
-	accountCode, badPasswordCount, accountExpires, passwordExpires, passwordLastSet string
+	accountCode, accountCreated, badPasswordCount, accountExpires, passwordExpires, passwordLastSet string
 	// Embedded structure
 	derived Derived
 }
@@ -39,21 +40,25 @@ type Derived struct {
 
 // Constants for searching Active Directory.
 const (
+	adInfinity = 9223372036854775807
 	filterSAM  = "(sAMAccountName=%s)"
 	filterName = "(name=%s)"
+	isTrue     = "True"
+	isNever    = "Never"
 )
 
 // Open declarations.
 var result *ldap.SearchResult
 var item *ldap.Entry
-var index, place int
+var index, redIndex, yellowIndex int
+var controllers, redDCs, yellowDCs []string
+var good, adm bool
 
 // Valued declarations.
-var time = strings.TrimSpace(powerShellRVS("(Get-date).TofileTime()"))
+var now = strings.TrimSpace(powerShellRVS("(Get-date).TofileTime()"))
 var ps, _ = exec.LookPath("powershell")
-var controllers, lockedDCs []string
 
-//var lockedDCs []string
+//var redDCs []string
 var ado = ADObject{}
 var uav = Values{}
 
@@ -66,10 +71,14 @@ func getInput(prompt string) string {
 }
 
 // The checkError function executes the builtin panic function if an error is detected.
-func checkError(err error) {
+func checkError(err error) bool {
+	var check bool
 	if err != nil {
-		log.Fatal(err)
+		check = false
+	} else {
+		check = true
 	}
+	return check
 }
 
 // The enterKey function pauses the transition to the nest screen until the enter key is pressed.
@@ -87,24 +96,35 @@ func clear() {
 // The localPC function gets the name of the local computer.
 func localPC() string {
 	pc, _ := os.Hostname()
-	checkError(err)
+	good = checkError(err)
 	return pc
 }
 
 // The cliu function gets the name of the local user.
 func cliu() string {
-	var account string
-	var accountf string
-	var accountl string
-
 	person, err := user.Current()
-	checkError(err)
-	account = person.Name
-	s := strings.Split(account, " ")
-	accountf = strings.TrimSpace(s[1])
-	accountl = strings.TrimSpace(strings.TrimSuffix(s[0], ","))
-	account = accountf + " " + accountl
-	return account
+	good = checkError(err)
+	loginName = person.Username
+	disn := person.Name
+	adm = true
+
+	if !strings.Contains(loginName, "adm-") {
+		adm = false
+		s := strings.Split(disn, " ")
+		disnf := strings.TrimSpace(s[1])
+		disnl := strings.TrimSpace(strings.TrimSuffix(s[0], ","))
+		disn = disnf + " " + disnl
+		loginName = "adm-" + loginName
+	}
+	return disn
+}
+
+// The admWarning function prints a warning if the logged in account does not have ADM privledges.
+func admWarning(lg int) {
+	if !adm {
+		fmt.Println(fgRed, language[3][lg])
+		fmt.Println()
+	}
 }
 
 // The query function searches AD though an established LDAP connection.
@@ -122,51 +142,53 @@ func query(link *ldap.Conn, filter string, search []string, object string) {
 
 // The searchBadPassword function scans a specified DC to determine how many bad password attempts have occured.
 func searchBadPassword(drip *ldap.SearchResult, controller string) {
-	var bpcOriginal string
+	var bpcs string
 	var bpc int
 
 	for _, item = range drip.Entries {
-		bpcOriginal = item.GetAttributeValue("badPwdCount")
-		bpc = intFromString(bpcOriginal)
-		if bpc > 3 {
-			controllers = append(controllers[:index], fgRed+controller+"         "+bpcOriginal+"         Locked")
-			lockedDCs = append(lockedDCs[:place], controller)
-			place++
-		} else if bpc < 4 && bpc > 0 {
-			controllers = append(controllers[:index], fgYellow+controller+"         "+bpcOriginal+"         Okay")
+		bpcs = item.GetAttributeValue("badPwdCount")
+		bpc = intFromString(bpcs)
+		if bpc > 2 {
+			controllers = append(controllers[:index], fgRed+controller+"           "+bpcs+"            "+language[176][lg])
+			redDCs = append(redDCs[:redIndex], controller)
+			redIndex++
+		} else if bpc < 3 && bpc > 0 {
+			controllers = append(controllers[:index], fgYellow+controller+"           "+bpcs+"            "+language[177][lg])
+			yellowDCs = append(yellowDCs[:yellowIndex], controller)
+			yellowIndex++
 		} else {
-			controllers = append(controllers[:index], fgGreen+controller+"         "+bpcOriginal+"         Good")
+			controllers = append(controllers[:index], fgGreen+controller+"           0             "+language[178][lg])
 		}
 	}
 }
 
-// The assignObjectValues function builds two objects and uses the contained information to determine user statuses such as password expiration and locked out account.
+// The assignObjectValues function builds two objects and uses the contained information to determine user statuses such as password or account expiration.
 func assignObjectValues(nond *ldap.SearchResult) {
 	for _, item = range nond.Entries {
-		ado = ADObject{item.GetAttributeValue("sAMAccountName"), item.GetAttributeValue("name"), item.GetAttributeValue("displayName"), item.GetAttributeValue("description"), item.GetAttributeValue("canonicalName"), strings.TrimSpace(convertLargeInt(item.GetAttributeValue("lastLogonTimestamp"))), Employee{item.GetAttributeValue("mail"), item.GetAttributeValue("department"), item.GetAttributeValue("title"), item.GetAttributeValue("description"), item.GetAttributeValue("st"), item.GetAttributeValue("canonicalName"), item.GetAttributeValue("homeDirectory"), strings.TrimSpace(convertLargeInt(item.GetAttributeValue("lastLogonTimestamp")))}, Machine{item.GetAttributeValue("dNSHostName")}}
-		uav = Values{item.GetAttributeValue("userAccountControl"), item.GetAttributeValue("badPwdCount"), item.GetAttributeValue("accountExpires"), item.GetAttributeValue("msDS-UserPasswordExpiryTimeComputed"), strings.TrimSpace(convertLargeInt(item.GetAttributeValue("pwdLastSet"))), Derived{"False", "False", "False", "False", "False"}}
+		ado = ADObject{item.GetAttributeValue("sAMAccountName"), item.GetAttributeValue("name"), item.GetAttributeValue("displayName"), item.GetAttributeValue("description"), item.GetAttributeValue("canonicalName"), strings.TrimSpace(convertLargeInt(item.GetAttributeValue("lastLogon"))), Employee{item.GetAttributeValue("mail"), item.GetAttributeValue("department"), item.GetAttributeValue("title"), item.GetAttributeValue("description"), item.GetAttributeValue("physicalDeliveryOfficeName"), item.GetAttributeValue("st"), item.GetAttributeValue("canonicalName"), item.GetAttributeValue("homeDirectory")}, Machine{item.GetAttributeValue("dNSHostName"), item.GetAttributeValue("operatingSystem"), item.GetAttributeValue("operatingSystemVersion")}}
+		uav = Values{item.GetAttributeValue("userAccountControl"), splitOZ(item.GetAttributeValue("whenCreated")), item.GetAttributeValue("badPwdCount"), item.GetAttributeValue("accountExpires"), item.GetAttributeValue("msDS-UserPasswordExpiryTimeComputed"), strings.TrimSpace(convertLargeInt(item.GetAttributeValue("pwdLastSet"))), Derived{"False", "False", "False", "False", "False"}}
 
-		if uav.badPasswordCount > "3" || uav.accountCode == "2" {
-			uav.derived.accountLocked = "True"
+		if intFromString(uav.badPasswordCount) > 2 || uav.accountCode == "2" {
+			uav.derived.accountLocked = isTrue
 		}
 
-		if uav.accountExpires == "0" {
-			uav.accountExpires = "Never"
+		if intFromString(uav.accountExpires) == 0 || uav.accountExpires == "" || intFromString(uav.accountExpires) == adInfinity {
+			uav.accountExpires = isNever
 		} else {
+			if now > uav.accountExpires {
+				uav.derived.accountExpired = isTrue
+			}
 			uav.accountExpires = strings.TrimSpace(convertLargeInt(item.GetAttributeValue("accountExpires")))
-			if time > uav.accountExpires {
-				uav.derived.accountExpired = "True"
-			}
 		}
 
-		if uav.passwordExpires == "0" {
-			uav.passwordExpires = "Never"
-			uav.derived.passwordNeverExpires = "True"
+		if intFromString(uav.passwordExpires) == 0 || uav.passwordExpires == isNever || intFromString(uav.passwordExpires) == adInfinity {
+			uav.passwordExpires = isNever
+			uav.derived.passwordNeverExpires = isTrue
 		} else {
-			uav.passwordExpires = strings.TrimSpace(convertLargeInt(item.GetAttributeValue("msDS-UserPasswordExpiryTimeComputed")))
-			if time > uav.passwordExpires {
-				uav.derived.passwordExpired = "True"
+			if now > uav.passwordExpires {
+				uav.derived.passwordExpired = isTrue
 			}
+			uav.passwordExpires = strings.TrimSpace(convertLargeInt(item.GetAttributeValue("msDS-UserPasswordExpiryTimeComputed")))
 		}
 
 		if ado.employee.email != "" {
@@ -189,18 +211,19 @@ func printUserValues() {
 	fmt.Println(" Department                  :", ado.employee.department)
 	fmt.Println(" Title                       :", ado.employee.title)
 	fmt.Println(" Description                 :", ado.employee.description)
+	fmt.Println(" Office                      :", ado.employee.office)
 	fmt.Println(" Province                    :", ado.employee.province)
 	fmt.Println(" AD Path                     :", ado.employee.path)
 	fmt.Println(" Home Directory              :", ado.employee.directory)
-	fmt.Println(" Last Logon                  :", ado.employee.lastLogon)
-	fmt.Println(" Account Locked Out          :", uav.derived.accountLocked)
+	fmt.Println(" Last Logon                  :", ado.lastLogon)
+	fmt.Println(" Account Created             :", uav.accountCreated)
 	fmt.Println(" Account Disabled            :", uav.derived.accountDisabled)
 	fmt.Println(" Account Expired             :", uav.derived.accountExpired)
 	fmt.Println(" Account Expires             :", uav.accountExpires)
 	fmt.Println(" Password Last Set           :", uav.passwordLastSet)
 	fmt.Println(" Password Expires            :", uav.passwordExpires)
 	fmt.Println(" Password Expired            :", uav.derived.passwordExpired)
-	fmt.Println(" Password Never Expires      :", uav.derived.passwordExpired)
+	fmt.Println(" Password Never Expires      :", uav.derived.passwordNeverExpires)
 }
 
 // The printUserValues function prints all the previously collected computer information to the terminal.
@@ -208,18 +231,21 @@ func printComputerValues() {
 	clear()
 	fmt.Print(" ", fgGreen, language[105][lg])
 	fmt.Println(fgBrightYellow, ado.name, colorReset)
-	fmt.Println("\n Full Name           :", ado.name)
-	fmt.Println(" AD Path             :", ado.employee.path)
-	fmt.Println(" FQDN                :", ado.machine.fqdn)
-	fmt.Println(" Description         :", ado.employee.description)
-	fmt.Println(" Last Logon          :", ado.employee.lastLogon)
+	fmt.Println("\n Full Name                 :", ado.name)
+	fmt.Println(" AD Path                   :", ado.employee.path)
+	fmt.Println(" FQDN                      :", ado.machine.fqdn)
+	fmt.Println(" Description               :", ado.employee.description)
+	fmt.Println(" Last Logon                :", ado.lastLogon)
+	fmt.Println(" Computer Created          :", uav.accountCreated)
+	fmt.Println(" Operating System          :", ado.machine.os)
+	fmt.Println(" OS Version                :", ado.machine.osv)
 }
 
 // The printControllerValues function prints all the previously collected bad password information accross all DC's to the terminal.
 func printControllerValues() {
 	clear()
-	fmt.Println("     DC Name         Attempts     Status")
-	fmt.Println(" ---------------     --------     ------")
+	fmt.Println("     DC Name            Attempts        Status")
+	fmt.Println(" ---------------        --------        ------")
 	for _, s := range controllers {
 		fmt.Println(" " + s)
 	}
@@ -227,10 +253,11 @@ func printControllerValues() {
 
 // The callForUnlock function asks the user if an unlock should be attempted and responds accordingly.
 func callForUnlock() {
-	if (len(lockedDCs)) > 0 {
+	if (len(redDCs)) > 0 {
 		fmt.Println("\n"+fgCyan, userName+colorReset, language[93][lg])
 		answer := strings.ToUpper(getInput(language[94][lg]))
 		if answer == "Y" {
+			fmt.Println("\n", language[95][lg]+fgCyan, userName)
 			unlock()
 			fmt.Println("\n", language[97][lg]+fgCyan, userName)
 		}
@@ -241,7 +268,11 @@ func callForUnlock() {
 
 // The unlock function attempts to unlock the user using the Unlock-ADAccount PowerShell function.
 func unlock() {
-	for _, s := range lockedDCs {
+	for _, s := range redDCs {
+		ldapMultiConnect(s)
+		powerShellEXE("Unlock-ADAccount -Server " + s + fqdn + " -Identity " + userName)
+	}
+	for _, s := range yellowDCs {
 		ldapMultiConnect(s)
 		powerShellEXE("Unlock-ADAccount -Server " + s + fqdn + " -Identity " + userName)
 	}
@@ -249,26 +280,39 @@ func unlock() {
 
 // The testConnection function will test the connection to a computer.
 func testConnection() {
-	var pingTest string
-	var pingGroup = [3]int{}
-	var pingResult, avgSpeed int
+	var pingArray = [3]int{}
+	var avgSpeed int
 
 	atPrompt()
-	fmt.Println(fgYellow, language[149][lg], fgWhite+computerName) // Checking connection to
+	fmt.Println(fgYellow, language[149][lg], fgWhite+computerName+"\n") // Checking connection to
 
 	for index = 0; index < 3; index++ {
-		pingTest = strings.TrimSpace(powerShellRVS("Test-Connection -ComputerName " + computerName + " -Count 1 -ErrorAction SilentlyContinue | Select -exp ResponseTime"))
-		pingResult = intFromString(pingTest)
-		pingGroup[index] = pingResult
+		pingArray[index] = pingComputer()
+		if pingArray[index] > 0 {
+			fmt.Println(" "+language[179][lg], pingArray[index], "ms")
+		} else {
+			fmt.Println(" Request timed out")
+		}
 	}
-	avgSpeed = (pingGroup[0] + pingGroup[1] + pingGroup[2]) / 3
+	avgSpeed = (pingArray[0] + pingArray[1] + pingArray[2]) / 3
 
 	if avgSpeed > 0 {
-		fmt.Println(fgGreen, language[150][lg]) // Connection succeeded!
+		fmt.Println(" "+language[180][lg], avgSpeed, "ms")
+		fmt.Println("\n"+fgGreen, language[150][lg]) // Connection succeeded!
 	} else {
-		fmt.Println(fgRed, language[151][lg]) // Connection failed!
+		fmt.Println("\n"+fgRed, language[151][lg]) // Connection failed!
 	}
 	enterKey()
+}
+
+func pingComputer() int {
+	var pingTest string
+	var pingResult int
+
+	pingTest = strings.TrimSpace(powerShellRVS("Test-Connection -ComputerName " + computerName + " -Count 1 -ErrorAction SilentlyContinue | Select -exp ResponseTime"))
+	pingResult = intFromString(pingTest)
+
+	return pingResult
 }
 
 // The disableCard function will disable a network card on a remote computer.
@@ -311,8 +355,7 @@ func logoff() {
 
 // The admLocationPrompt function returns a number corresponding to the chosen province.
 func admLocationPrompt() int {
-	//clear()
-	locationTitle()
+	regionTitle()
 	regionMenu()
 	return intFromString(getInput("Select your location: "))
 }
@@ -367,6 +410,13 @@ func intFromString(convertable string) int {
 	return freshInt
 }
 
+func splitOZ(oz string) string {
+	strings.TrimSuffix(oz, ".0Z")
+	year, month, day, hour, min, sec := oz[0:4], oz[4:6], oz[6:8], oz[8:10], oz[10:12], oz[12:14]
+	utc := year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec
+	return utc
+}
+
 // The convertLargeInt function converts a Large Integer to a String value.
 func convertLargeInt(value string) string {
 	return powerShellRVS("(Get-Date 1/1/1601).AddDays(" + value + "/864000000000).AddHours(" + timezone() + ")")
@@ -379,7 +429,7 @@ func powerShellEXE(task string) {
 	psCmd.Stderr = os.Stderr
 
 	err := psCmd.Run()
-	checkError(err)
+	good = checkError(err)
 }
 
 // The powershellRVS function runs a PowerShell command and returns the output as a String.

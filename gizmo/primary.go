@@ -33,6 +33,7 @@ const (
 	fgBrightWhite   = "\033[97m"
 
 	// Constants for binding and searching the LDAP server.
+	many   = 200
 	fqdn   = ".CFIA-ACIA.inspection.gc.ca"
 	baseDN = "DC=CFIA-ACIA,DC=inspection,DC=gc,DC=ca"
 )
@@ -40,39 +41,48 @@ const (
 // Open declarations.
 var computerName, groupName, printerName, userName, ldapBind string
 var links *ldap.Conn
+var prov int
 
 // Valued declarations.
 var ldapUser = cliu()
 
 //var ldapURL = "ldaps://" + testDomain() + fqdn
-var ldapURL = "ldaps://CFONK1AWVDCP008" + fqdn
+var ldapURL = "ldaps://CFONK1AWVDCP007" + fqdn
 var link, err = ldap.DialURL(ldapURL)
 var badPasswordSP = []string{"badPwdCount", "badPasswordTime"}
-var computerSP = []string{"name", "description", "canonicalName", "dNSHostName", "lastLogonTimestamp", "userAccountControl"}
-var userSP = []string{"sAMAccountName", "name", "displayName", "title", "mail", "department", "description", "st", "lastLogonTimestamp", "pwdLastSet", "homeDirectory", "userAccountControl", "canonicalName", "accountExpires", "badPwdCount", "msDS-UserPasswordExpiryTimeComputed"}
+var computerSP = []string{"name", "description", "canonicalName", "dNSHostName", "lastLogon", "userAccountControl", "operatingSystem", "operatingSystemVersion", "whenCreated"}
+var userSP = []string{"physicalDeliveryOfficeName", "sAMAccountName", "name", "displayName", "title", "mail", "department", "description", "st", "lastLogon", "pwdLastSet", "homeDirectory", "userAccountControl", "canonicalName", "accountExpires", "badPwdCount", "msDS-UserPasswordExpiryTimeComputed", "whenCreated"}
 
-// The ldapConnect function connects to the best available Domain Controllers.
+// The ldapConnect function connects to the best available Domain Controller.
 func ldapConnect() {
-	var correct = false
-	for !correct {
-		region := admLocationPrompt()
-		ldapBind, _ = "CN="+ldapUser+",OU="+province[region]+",OU=Administrative Objects,"+baseDN, err
-		err = link.Bind(ldapBind, ldapPassword)
-		if err != nil {
-			fmt.Print("\n ", language[86][lg])
-			enterKey()
-		} else {
-			correct = true
-		}
+	welcome(lg)
+	prov = admLocationPrompt()
+	ldapBind, _ = "CN="+ldapUser+",OU="+province[prov]+",OU=Administrative Objects,"+baseDN, err
+	err = link.Bind(ldapBind, loginPassword)
+	good = checkError(err)
+	for !good {
+		fmt.Print("\n ", language[86][lg])
+		enterKey()
+		welcome(lg)
+		ldapBind, _ = "CN="+ldapUser+",OU="+province[admLocationPrompt()]+",OU=Administrative Objects,"+baseDN, err
+		err = link.Bind(ldapBind, loginPassword)
+		good = checkError(err)
 	}
 }
 
-// The ldapMultiConnect function connects to the best available Domain Controllers.
+// The ldapConnect function reconnects to the targeted Domain Controller in order to search AD.
+func ldapReconnect() {
+	link, err = ldap.DialURL(ldapURL)
+	ldapBind, _ = "CN="+ldapUser+",OU="+province[prov]+",OU=Administrative Objects,"+baseDN, err
+	err = link.Bind(ldapBind, loginPassword)
+}
+
+// The ldapMultiConnect function connects systematically to all the Domain Controllers.
 func ldapMultiConnect(e string) {
 	ldapSearchURL := "ldaps://" + e + fqdn
 	links, err = ldap.DialURL(ldapSearchURL)
-	err = links.Bind(ldapBind, ldapPassword)
-	checkError(err)
+	err = links.Bind(ldapBind, loginPassword)
+	good = checkError(err)
 }
 
 // The testDomain function finds the connection speeds of the available Domain Controllers.
@@ -101,8 +111,11 @@ func testDomain() string {
 // The searchDomainControllers function searches all known DC's for bad password counts.
 func searchDomainControllers() {
 	index = 0
-	place = 0
-	lockedDCs = lockedDCs[:0]
+	redIndex = 0
+	yellowIndex = 0
+	redDCs = redDCs[:0]
+	yellowDCs = yellowDCs[:0]
+
 	for _, s := range cfia {
 		ldapMultiConnect(s)
 		query(links, filterSAM, badPasswordSP, userName)
@@ -131,8 +144,9 @@ func orca() {
 }
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
-func password(link *ldap.Conn) {
+func changePassword(link *ldap.Conn) {
 	usPrompt()
+	ldapReconnect()
 	fmt.Println(language[80][lg])
 	oldPassword := getInput("\n Enter your current password: ")
 	fmt.Println(language[87][lg])
@@ -149,6 +163,7 @@ func password(link *ldap.Conn) {
 	} else {
 		fmt.Println(language[83][lg])
 	}
+	link.Close()
 	enterKey()
 }
 
@@ -165,8 +180,10 @@ func locked() {
 // The entity function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func entity() {
 	usPrompt()
+	ldapReconnect()
 	query(link, filterSAM, userSP, userName)
 	assignObjectValues(result)
+	link.Close()
 	enterKey()
 }
 
@@ -174,8 +191,10 @@ func entity() {
 func computer() {
 	csPrompt()
 	fmt.Println("\n Checking for...", computerName)
+	ldapReconnect()
 	query(link, filterName, computerSP, computerName)
 	assignObjectValues(result)
+	link.Close()
 	enterKey()
 }
 

@@ -5,33 +5,58 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"syscall"
+
+	"golang.org/x/term"
 )
 
 const (
 	back, exit = "8", "9"
 )
 
-var lg int
-var choice, choiceL2, choiceL3 string
+var choice, choiceL2, choiceL3, loginName string
 var reader = bufio.NewReader(os.Stdin)
+var loginPassword, _ = credentials()
+var lg int
+
+// The credentials function captures the ADM login password as a byte.
+func credentials() (string, error) {
+	//reader := bufio.NewReader(os.Stdin)
+
+	// fmt.Print("Enter Username: ")
+	// loginName, err := reader.ReadString('\n')
+	// if err != nil {
+	// 	return "", "", err
+	// }
+	clear()
+	fmt.Print(" Enter your ADM password for LDAP connection: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return "", err
+	}
+
+	loginPassword := string(bytePassword)
+	//return strings.TrimSpace(loginName), strings.TrimSpace(loginPassword), nil
+	return strings.TrimSpace(loginPassword), nil
+}
 
 // The MainOptions function uses a switch statement to direct the user to a chosen task.
-func MainOptions() {
+func DefaultOptions() {
 	lg = lcid()
-	welcome(lg)
 	ldapConnect()
+
 	for choice != exit {
 		welcome(lg)
+		admWarning(lg)
 		mainMenu(lg)
 		choiceL2 = ""
-		choice = getInput(language[5][lg])
-		choice = strings.Title(strings.Replace(choice, "\r\n", "", -1))
+		choice = strings.Title(strings.Replace(getInput(language[5][lg]), "\r\n", "", -1))
 
 		switch choice {
 		case "0":
 			orca()
 		case "1":
-			password(link)
+			changePassword(link)
 		case "2":
 			locked()
 		case "3":
@@ -53,8 +78,8 @@ func MainOptions() {
 			fmt.Println("\nInvalid choice - Please try another selection")
 			enterKey()
 		}
+		//time.Sleep(90 * time.Minute)
 	}
-	link.Close()
 }
 
 // The advancedOptions function uses a switch statement to launch the appropriate function.
@@ -64,8 +89,7 @@ func advancedOptions() {
 		atPrompt()
 		advancedMenu(lg)
 		choiceL3 = ""
-		choiceL2 = getInput(language[5][lg])
-		choiceL2 = strings.Title(strings.Replace(choiceL2, "\r\n", "", -1))
+		choiceL2 = strings.Title(strings.Replace(getInput(language[5][lg]), "\r\n", "", -1))
 
 		switch choiceL2 {
 		case "1":
@@ -101,8 +125,7 @@ func processOptions() {
 	for choiceL3 != back {
 		atPrompt()
 		processMenu(lg) // Display Menu
-		choiceL3 = getInput(language[30][lg])
-		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
+		choiceL3 = strings.Title(strings.Replace(getInput(language[30][lg]), "\r\n", "", -1))
 
 		switch choiceL3 {
 		case "1":
@@ -133,8 +156,7 @@ func serviceOptions() {
 		var serviceName string
 		atPrompt()
 		serviceMenu(lg) // Display Menu
-		choiceL3 = getInput(language[30][lg])
-		choiceL3 = strings.Title(strings.Replace(choiceL3, "\r\n", "", -1))
+		choiceL3 = strings.Title(strings.Replace(getInput(language[30][lg]), "\r\n", "", -1))
 
 		switch choiceL3 {
 		case "1":

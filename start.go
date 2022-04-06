@@ -17,5 +17,7 @@ import (
 
 // The main function launches the program and executes the main selection of program abilities.
 func main() {
-	Q.MainOptions()
+	//fmt.Printf("Username: %s, Password: %s\n", username, password)
+
+	Q.DefaultOptions()
 }

@@ -6,11 +6,11 @@ var province = []string{"AB", "BC", "MB", "NB", "NC", "NL", "NS", "ON", "PE", "Q
 var cfia = []string{"CFONK1AWPDCP004", "CFABT2EWPDCP004", "CFABT2LWPDCP002", "CFBCV5CWPDCP002", "CFMBR3EWPDCP002", "CFNBE1CWPDCP004", "CFNSB3BWPDCP002", "CFONK1AWPDCP004", "CFONK1AWVDCP007", "CFONK1AWVDCP008", "CFONL5TWPDCP002", "CFONM3JWPDCP002", "CFONN1GWPDCP002", "CFONN1HWPDCP002", "CFQCH3AWPDCP002", "CFQCJ2SWPDCP002", "CFSKS7NWPDCP002"}
 
 // An array with 177 rows and 2 columns to hold the bilingual text options.
-var language = [177][2]string{
+var language = [181][2]string{
 	{"for Active Directory ...and more!", "Pour Active directory ...et plus!"},
-	{"Go version created by:", "Version Go cree par:"},
-	{"Testing and Support:", "Test et Support:"},
-	{"WARNING!!! You aren't logged with your ADM account", "ATTENTION!!! Vous n'etes pas connecte avec votre compte ADM"},
+	{"Go language version created by:", "Version Go cree par:"},
+	{"Testing and support:", "Test et support:"},
+	{"WARNING!!! You aren't logged in with your ADM account", "ATTENTION!!! Vous n'etes pas connecte avec votre compte ADM"},
 	{"Welcome", "Bienvenue"},
 	{"Please make a selection: ", "S'il vous plait faire une selection: "},
 	{"RESET Password", "REINITIALISER un mot de passe"},
@@ -101,7 +101,7 @@ var language = [177][2]string{
 	{"The account", "Le compte"},
 	{"doesn't appear to be locked.", "ne semble pas etre verouille."},
 	{"account is locked out.", "Ce compte est verouille."},
-	{"Do you want to unlock it now? ", "Est-ce que vous voulez le deverouiller maintenant? "},
+	{"Do you want to unlock it now? (Y\\N) ", "Est-ce que vous voulez le deverouiller maintenant? (Y\\N) "},
 	{"Unlocking", "Deverouillage"},
 	{"Unlocking account on", "Deverouillage en cours sur"},
 	{"I think I unlocked", "J'ai deverouille le compte"},
@@ -183,4 +183,9 @@ var language = [177][2]string{
 	{"PowerShell version created by:", "Version originale de PowerShell cree par:"},
 	{"Main Menu", "Menu Principal"},
 	{"Region", "Région"},
+	{"Locked", "Verouille"},
+	{"Danger", "Danger"},
+	{"Good", "Bon"},
+	{"Response Time:", "Temps de réponse:"},
+	{"Average Response Time:", "Temps de réponse moyen:"},
 }
