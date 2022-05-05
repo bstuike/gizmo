@@ -145,7 +145,7 @@ func orca() {
 
 // The password function is used to reset a user password in AD. It asks for a new password, if the user must change password at next logon, for a confirmation and if the user wants to check if the account is locked out.
 func changePassword(link *ldap.Conn) {
-	usPrompt()
+	userName = usPrompt()
 	ldapReconnect()
 	fmt.Println(language[80][lg])
 	oldPassword := getInput("\n Enter your current password: ")
@@ -169,7 +169,7 @@ func changePassword(link *ldap.Conn) {
 
 // The locked function will verify if an account is locked out. If yes, it will propose to unlock it.
 func locked() {
-	usPrompt()
+	userName = usPrompt()
 	fmt.Print("\n ", language[90][lg])
 	searchDomainControllers()
 	printControllerValues()
@@ -179,7 +179,7 @@ func locked() {
 
 // The entity function asks the user for a username and pulls the account information from Active Directory. It also gives quick hints & warnings about the account (ex. if expired, disabled, etc.).
 func entity() {
-	usPrompt()
+	userName = usPrompt()
 	ldapReconnect()
 	query(link, filterSAM, userSP, userName)
 	assignObjectValues(result)
@@ -189,7 +189,7 @@ func entity() {
 
 // The computer function asks the user for a computer name and pulls the machine information from Active Directory.
 func computer() {
-	csPrompt()
+	computerName = csPrompt()
 	fmt.Println("\n Checking for...", computerName)
 	ldapReconnect()
 	query(link, filterName, computerSP, computerName)
@@ -200,14 +200,14 @@ func computer() {
 
 // The group function asks for a group name and then searches Active Directory.
 func group() {
-	gsPrompt()
+	groupName = gsPrompt()
 	fmt.Println("\n Checking for...", groupName)
 	enterKey()
 }
 
 // The printer function will ask for printer name, will retrieve the information from AD and test it. Optionally, you can retrieve the full list of CFIA printers.
 func printer() {
-	psPrompt()
+	printerName = psPrompt()
 	fmt.Println("\n Checking for...", printerName)
 	enterKey()
 }

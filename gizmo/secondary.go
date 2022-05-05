@@ -257,9 +257,11 @@ func callForUnlock() {
 		fmt.Println("\n"+fgCyan, userName+colorReset, language[93][lg])
 		answer := strings.ToUpper(getInput(language[94][lg]))
 		if answer == "Y" {
-			fmt.Println("\n", language[95][lg]+fgCyan, userName)
+			fmt.Print("\n ", language[95][lg], fgCyan, userName)
+			fmt.Println(colorReset)
 			unlock()
-			fmt.Println("\n", language[97][lg]+fgCyan, userName)
+			fmt.Print("\n ", language[97][lg], fgCyan, userName)
+			fmt.Println(colorReset)
 		}
 	} else {
 		fmt.Println("\n", colorReset+language[91][lg]+fgCyan, userName, colorReset+language[92][lg])
@@ -283,7 +285,7 @@ func testConnection() {
 	var pingArray = [3]int{}
 	var avgSpeed int
 
-	atPrompt()
+	atConfirm()
 	fmt.Println(fgYellow, language[149][lg], fgWhite+computerName+"\n") // Checking connection to
 
 	for index = 0; index < 3; index++ {
@@ -360,8 +362,8 @@ func admLocationPrompt() int {
 	return intFromString(getInput("Select your location: "))
 }
 
-// The atPrompt function displays the computer connected to the application.
-func atPrompt() {
+// The atConfirm function displays the computer connected to the application.
+func atConfirm() {
 	clear()
 	fmt.Print(" " + language[15][lg] + ":") // Advanced tools are currently linked to
 	fmt.Println(fgGreen, computerName)
@@ -369,34 +371,34 @@ func atPrompt() {
 }
 
 // The usPrompt function loads the User Search dialog and prompts for a name to search.
-func usPrompt() {
+func usPrompt() string {
 	clear()
 	usTitle()
 	fmt.Println("\n [ex. beo, beordma, beo*dma...]")
-	userName = getInput(language[65][lg])
+	return getInput(language[65][lg])
 }
 
 // The csPrompt function loads the Computer Search dialog and prompts for a name to search.
-func csPrompt() {
+func csPrompt() string {
 	clear()
 	csTitle()
 	fmt.Println("\n [ex. ncdec652445, 652445, 65244*, 10.141.12.58, ncdec652445.cfia-acia.inspection.gc.ca...]")
-	computerName = getInput(language[71][lg])
+	return getInput(language[71][lg])
 }
 
 // The psPrompt function loads the Printer Search dialog and prompts for a name to search.
-func psPrompt() {
+func psPrompt() string {
 	clear()
 	psTitle()
 	fmt.Println("\n [ex. P141022202, 10.136.52.188...]")
-	printerName = getInput(language[75][lg])
+	return getInput(language[75][lg])
 }
 
 // The gsPrompt function loads the Group Search dialog and prompts for a name to search.
-func gsPrompt() {
+func gsPrompt() string {
 	clear()
 	gsTitle()
-	groupName = getInput(language[78][lg])
+	return getInput(language[78][lg])
 }
 
 // The timezone function returns the current difference from UTC.

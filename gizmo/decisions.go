@@ -86,7 +86,7 @@ func DefaultOptions() {
 func advancedOptions() {
 	csPrompt()
 	for choiceL2 != back {
-		atPrompt()
+		atConfirm()
 		advancedMenu(lg)
 		choiceL3 = ""
 		choiceL2 = strings.Title(strings.Replace(getInput(language[5][lg]), "\r\n", "", -1))
@@ -123,7 +123,7 @@ func advancedOptions() {
 // The processOptions function uses a switch statement to take action based on user input.
 func processOptions() {
 	for choiceL3 != back {
-		atPrompt()
+		atConfirm()
 		processMenu(lg) // Display Menu
 		choiceL3 = strings.Title(strings.Replace(getInput(language[30][lg]), "\r\n", "", -1))
 
@@ -154,7 +154,7 @@ func processOptions() {
 func serviceOptions() {
 	for choiceL3 != back {
 		var serviceName string
-		atPrompt()
+		atConfirm()
 		serviceMenu(lg) // Display Menu
 		choiceL3 = strings.Title(strings.Replace(getInput(language[30][lg]), "\r\n", "", -1))
 
