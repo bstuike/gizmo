@@ -46,8 +46,9 @@ var prov int
 // Valued declarations.
 var ldapUser = cliu()
 
-//var ldapURL = "ldaps://" + testDomain() + fqdn
-var ldapURL = "ldaps://CFONK1AWVDCP007" + fqdn
+var ldapURL = "ldaps://" + testDomain() + fqdn
+
+//var ldapURL = "ldaps://CFONK1AWVDCP007" + fqdn
 var link, err = ldap.DialURL(ldapURL)
 var badPasswordSP = []string{"badPwdCount", "badPasswordTime"}
 var computerSP = []string{"name", "description", "canonicalName", "dNSHostName", "lastLogon", "userAccountControl", "operatingSystem", "operatingSystemVersion", "whenCreated"}

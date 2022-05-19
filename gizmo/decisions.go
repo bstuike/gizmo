@@ -84,7 +84,7 @@ func DefaultOptions() {
 
 // The advancedOptions function uses a switch statement to launch the appropriate function.
 func advancedOptions() {
-	csPrompt()
+	computerName = csPrompt()
 	for choiceL2 != back {
 		atConfirm()
 		advancedMenu(lg)
